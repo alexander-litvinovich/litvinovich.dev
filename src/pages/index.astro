@@ -1,0 +1,74 @@
+---
+import { Image } from "astro:assets";
+
+import DarkLayout from "@/layouts/DarkLayout.astro";
+import AppIcon from "@/components/AppIcon.astro";
+
+import MicroCard from "@/components/MicroCard.astro";
+import MicroSocialLinks from "@/components/MicroSocialLinks.astro";
+import MicroLinkButtons from "@/components/MicroLinkButtons.astro";
+import MicroDesc from "@/components/MicroDesc.astro";
+import MicroMotd from "@/components/MicroMotd.astro";
+import MicroDate from "@/components/MicroDate.astro";
+import MicroGlyph from "@/components/MicroGlyph.astro";
+
+import logoHero from "@/assets/better-tomorrow-hero.png";
+
+import projectIconBT from "@/assets/project_icon_bt.png";
+import projectIconMindsweeper from "@/assets/project_icon_mindsweeper.png";
+import uglyIcon from "@/assets/social_cic.svg";
+
+const SOCIAL_LINKS = [
+  {
+    label: "LinkedIn",
+    href: "#",
+  },
+  {
+    label: "Telegram",
+    href: "#",
+  },
+  {
+    label: "Instagram",
+    href: "#",
+  },
+  {
+    label: "GitHub",
+    href: "#",
+  },
+];
+
+const BUTTONS = [
+  {
+    label: "Sohranil",
+    href: "#",
+    desc: "Telegram blog",
+  },
+  {
+    label: "Sohranil",
+    href: "#",
+    desc: "Telegram blog",
+  },
+  {
+    label: "Sohranil",
+    href: "#",
+    desc: "Telegram blog",
+  },
+];
+
+const DESC = [
+  "Made using modern web technologies, not a website constructor",
+  "Best viewed in PsyFX on a desktop",
+];
+---
+
+<DarkLayout>
+  <MicroCard />
+  <MicroSocialLinks links={SOCIAL_LINKS} />
+  <MicroLinkButtons buttons={BUTTONS} />
+  <MicroDesc texts={DESC} />
+  <MicroMotd />
+  <MicroDate />
+  <MicroGlyph />
+</DarkLayout>
+
+<style></style>

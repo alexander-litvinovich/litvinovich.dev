@@ -1,0 +1,45 @@
+---
+import Asterisk from "@/assets/asterisk.svg";
+---
+
+<div class="MicroMotd">
+  <Asterisk class="MicroMotd_asterisk" />
+  <p class="MicroMotd_text">
+    Want a fancy micro landing page?<br />
+    <a href="#" target="_blank">Check out GitHub for DIY example</a>
+    <br />or
+    <a href="#" target="_blank">order Design Services</a>
+  </p>
+</div>
+
+<style>
+  .MicroMotd {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+
+    color: rgba(255, 255, 255, 0.3);
+  }
+
+  .MicroMotd_asterisk {
+    width: 40px;
+    aspect-ratio: 1;
+  }
+
+  .MicroMotd_text {
+    padding: 0;
+    margin: 0;
+
+    font-family: "Roboto Mono";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 16px;
+  }
+
+  .MicroMotd_text a {
+    color: var(--color-blue);
+    text-decoration: none;
+  }
+</style>

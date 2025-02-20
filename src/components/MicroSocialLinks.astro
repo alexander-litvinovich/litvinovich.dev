@@ -1,0 +1,87 @@
+---
+interface Link {
+  href: string;
+  label: string;
+}
+
+const { links } = Astro.props as { links: Link[] };
+---
+
+<div class="MicroSocialLinks">
+  <div class="MicroSocialLinks_hint">Feel free to drop me a line:</div>
+  <div class="MicroSocialLinks_grid">
+    {
+      links.map((link) => (
+        <a class="MicroSocialLinks_link" href={link.href} target="_blank">
+          <span class="MicroSocialLinks_label">{link.label}</span>
+        </a>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  .MicroSocialLinks {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .MicroSocialLinks_hint {
+    font-family: "Georgia";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 14px;
+
+    color: #ffffff;
+
+    opacity: 0.3;
+  }
+  .MicroSocialLinks_grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .MicroSocialLinks_link {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    position: relative;
+
+    color: var(--color-green);
+    text-decoration: none;
+    text-align: left;
+
+    font-family: "Roboto Mono";
+    font-style: normal;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 32px;
+  }
+
+  .MicroSocialLinks_link::before,
+  .MicroSocialLinks_link::after {
+    content: "";
+    display: block;
+  }
+
+  .MicroSocialLinks_link::before {
+    position: absolute;
+    top: 0;
+    right: 0;
+    border-style: solid;
+    border-width: 4px;
+    border-color: var(--color-green) var(--color-green) transparent transparent;
+  }
+
+  .MicroSocialLinks_link::after {
+    height: var(--border-width);
+    background-color: var(--color-green);
+  }
+
+  .MicroSocialLinks_label {
+  }
+</style>

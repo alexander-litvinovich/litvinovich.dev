@@ -1,0 +1,72 @@
+---
+interface Button {
+  label: string;
+  desc: string;
+  href: string;
+}
+
+const { buttons } = Astro.props as { buttons: Button[] };
+---
+
+<div class="MicroLinkButtons">
+  {
+    buttons.map((button, index) => (
+      <>
+        <a class="MicroLinkButtons_button" href={button.href} target="_blank">
+          <span class="MicroLinkButtons_label">{button.label}</span>
+          <span class="MicroLinkButtons_desc">{button.desc}</span>
+        </a>
+        {index < buttons.length - 1 && (
+          <div class="MicroLinkButtons_separator" />
+        )}
+      </>
+    ))
+  }
+</div>
+
+<style>
+  .MicroLinkButtons {
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+    gap: 16px;
+
+    background-color: #111;
+
+    border-radius: 16px;
+  }
+
+  .MicroLinkButtons_button {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+  }
+
+  .MicroLinkButtons_label {
+    font-family: "Roboto Mono";
+    font-style: normal;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 32px;
+
+    color: var(--color-green);
+  }
+
+  .MicroLinkButtons_desc {
+    font-family: "Georgia";
+    font-style: italic;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 16px;
+
+    color: #ffffff;
+
+    opacity: 0.5;
+  }
+
+  .MicroLinkButtons_separator {
+    height: 1px;
+    background-color: #fff;
+    opacity: 0.2;
+  }
+</style>

@@ -1,0 +1,30 @@
+---
+const { texts } = Astro.props as { texts: [] };
+---
+
+<div class="MicroDesk">
+  {texts.map((text) => <div class="MicroDesk_text">{text}</div>)}
+</div>
+
+<style>
+  .MicroDesk {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+
+    padding-top: 8px;
+    border-top: var(--border-width) solid #fff;
+  }
+
+  .MicroDesk_text {
+    font-family: "Georgia";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 14px;
+
+    color: #ffffff;
+
+    opacity: 0.3;
+  }
+</style>

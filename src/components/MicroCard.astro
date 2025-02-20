@@ -1,0 +1,79 @@
+---
+import QRCode from "@/assets/qr_code.svg";
+import MicroAvatar from "@/components/MicroAvatar.astro";
+
+const name = "Alexander “Saša” Litvinovich";
+const desc = ["Designer", "SWE", "Aspiring PM"];
+const email = "litvinovich.alexander@gmail.com";
+---
+
+<div class="MicroCard">
+  <MicroAvatar />
+
+  <div class="MicroCard_qr">
+    <QRCode />
+  </div>
+  <div class="MicroCard_name">{name}</div>
+  <div class="MicroCard_desc">
+    {
+      desc.map((text, index) => (
+        <>
+          <span class="MicroCard_descText">{text}</span>
+          {index < desc.length - 1 && (
+            <span class="MicroCard_descSeparator">×</span>
+          )}
+        </>
+      ))
+    }
+  </div>
+  <a class="MicroCard_email" href={"mailto:" + email}>{email}</a>
+</div>
+
+<style>
+  .MicroCard {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .MicroCard_qr {
+    color: var(--color-green);
+  }
+
+  .MicroCard_name {
+    font-family: "Roboto Mono";
+    font-style: normal;
+    font-weight: 700;
+    font-size: 30px;
+    line-height: 32px;
+
+    color: #ffffff;
+  }
+
+  .MicroCard_descText,
+  .MicroCard_descSeparator {
+    font-family: "Georgia";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 24px;
+
+    color: #ffffff;
+  }
+
+  .MicroCard_descSeparator {
+    opacity: 0.2;
+  }
+
+  .MicroCard_email {
+    font-family: "Georgia";
+    font-style: italic;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 24px;
+
+    color: #ffffff;
+
+    opacity: 0.5;
+  }
+</style>

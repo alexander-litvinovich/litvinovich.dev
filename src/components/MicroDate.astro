@@ -1,0 +1,169 @@
+---
+import Globe from "@/assets/globe.svg";
+---
+
+<div class="MicroDate">
+  <div class="MicroDate_1">0</div>
+  <div>×</div>
+  <div class="MicroDate_line">
+    <span class="MicroDate_4">0</span>
+    <a class="MicroDate_link" href="#">
+      <Globe />
+      <div class="MicroDate_date">
+        <span class="MicroDate_year"> 0000 </span>
+        <div class="MicroDate_separator"></div>
+        <span class="MicroDate_yearRoman"> XXXX </span>
+      </div>
+      <div class="MicroDate_madein">Better<br />Tomorrow</div>
+    </a>
+    <span class="MicroDate_2">0</span>
+  </div>
+  <div class="MicroDate_3">0</div>
+</div>
+
+<style>
+  .MicroDate {
+    color: rgba(255, 255, 255, 0.3);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    font-family: "Roboto Mono";
+    font-style: normal;
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 16px;
+
+    text-align: center;
+  }
+  .MicroDate_yearRoman {
+    font-family: "Georgia";
+    font-style: normal;
+    font-weight: 700;
+    font-size: 8px;
+    line-height: 12px;
+
+    text-align: center;
+    letter-spacing: 0.03em;
+  }
+
+  .MicroDate_line {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+
+    align-items: center;
+    justify-items: center;
+    justify-content: space-between;
+  }
+
+  .MicroDate_link {
+    color: inherit;
+    text-decoration: none;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+
+    border: 2px solid currentColor;
+    border-radius: 9999px;
+    padding: 6px 16px 6px 8px;
+  }
+
+  .MicroDate_link:hover {
+    color: var(--color-blue);
+  }
+
+  .MicroDate_date {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .MicroDate_separator {
+    width: 100%;
+    height: 1px;
+    color: inherit;
+    background-color: currentColor;
+  }
+
+  .MicroDate_madein {
+    text-align: center;
+    text-transform: uppercase;
+    line-height: 12px;
+  }
+</style>
+
+<script>
+  function convertToRoman(num: number) {
+    const romanThousands = ["", "M", "MM", "MMM"];
+    const romanHundreds = [
+      "",
+      "C",
+      "CC",
+      "CCC",
+      "CD",
+      "D",
+      "DC",
+      "DCC",
+      "DCCC",
+      "CM",
+    ];
+    const romanTens = [
+      "",
+      "X",
+      "XX",
+      "XXX",
+      "XL",
+      "L",
+      "LX",
+      "LXX",
+      "LXXX",
+      "XC",
+    ];
+    const romanOnes = [
+      "",
+      "I",
+      "II",
+      "III",
+      "IV",
+      "V",
+      "VI",
+      "VII",
+      "VIII",
+      "IX",
+    ];
+
+    return (
+      romanThousands[Math.floor(num / 1000)] +
+      romanHundreds[Math.floor((num % 1000) / 100)] +
+      romanTens[Math.floor((num % 100) / 10)] +
+      romanOnes[num % 10]
+    );
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const currentYear = new Date().getFullYear();
+    const yearElement = document.querySelector(".MicroDate_year");
+    const yearRomanElement = document.querySelector(".MicroDate_yearRoman");
+    const yearDigit1 = document.querySelector(".MicroDate_1");
+    const yearDigit2 = document.querySelector(".MicroDate_2");
+    const yearDigit3 = document.querySelector(".MicroDate_3");
+    const yearDigit4 = document.querySelector(".MicroDate_4");
+
+    if (yearElement) {
+      yearElement.textContent = currentYear.toString();
+    }
+
+    if (yearRomanElement) {
+      yearRomanElement.textContent = convertToRoman(currentYear);
+    }
+
+    if (yearDigit1 && yearDigit2 && yearDigit3 && yearDigit4) {
+      yearDigit1.textContent = currentYear.toString()[0];
+      yearDigit2.textContent = currentYear.toString()[1];
+      yearDigit3.textContent = currentYear.toString()[2];
+      yearDigit4.textContent = currentYear.toString()[3];
+    }
+  });
+</script>

@@ -1,0 +1,23 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+const { head } = Astro.props;
+---
+
+<BaseLayout head={head}>
+  <div class="DarkLayout">
+    <slot />
+  </div>
+</BaseLayout>
+
+<style>
+  html,
+  body {
+    color: #fff;
+    background-color: #222;
+  }
+
+  .DarkLayout {
+    margin: 0 auto;
+    padding: 24px;
+  }
+</style>

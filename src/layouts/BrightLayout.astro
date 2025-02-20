@@ -1,0 +1,17 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+
+const { head } = Astro.props;
+---
+
+<BaseLayout head={head}>
+	<slot />
+</BaseLayout>
+
+<style>
+	html,
+	body {
+		color: #000000;
+		background-color: #fff;
+	}
+</style>

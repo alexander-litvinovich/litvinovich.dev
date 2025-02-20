@@ -1,0 +1,67 @@
+---
+import appleTouchIcon from "@/assets/favicon/apple-touch-icon.png";
+import "@/assets/ui.css";
+import icon16 from "@/assets/favicon/favicon-16x16.png";
+import icon32 from "@/assets/favicon/favicon-32x32.png";
+
+const {
+  head = {
+    title: "Better Tomorrow",
+    description: "",
+  },
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="apple-touch-icon" sizes="180x180" href={appleTouchIcon.src} />
+    <link rel="icon" type="image/png" sizes="32x32" href={icon32.src} />
+    <link rel="icon" type="image/png" sizes="16x16" href={icon16.src} />
+
+    <meta name="msapplication-TileColor" content="#26242F" />
+    <meta name="theme-color" content="#26242F" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{head.title}</title>
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>
+
+<style>
+  @import url("https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap");
+
+  :root {
+    --color-green: #15ec67;
+    --color-violet: #eb00ff;
+    --color-blue: #3a76ff;
+    --color-underpaper: #222;
+    --color-paper: #f0f0f0;
+
+    --color-ink: rgb(255, 215, 246);
+    --color-ink-50: hsla(314, 80%, 92%, 0.5);
+    --color-ink-30: hsla(314, 80%, 92%, 0.3);
+    --color-ink-20: hsla(314, 80%, 92%, 0.2);
+    --color-black-50: rgb(0, 0, 0, 0.5);
+  }
+
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+
+    width: 100%;
+    height: 100%;
+
+    font-family: "Roboto Mono", serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: -0.05em;
+  }
+</style>

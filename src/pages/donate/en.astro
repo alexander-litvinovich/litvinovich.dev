@@ -1,0 +1,270 @@
+---
+// Donation page
+// TODO: Add translation to eng
+
+import { Image } from "astro:assets";
+
+import DonateAccount from "@/components/DonateAccount.astro";
+import SocialAccount from "@/components/SocialAccount.astro";
+import Particles from "@/components/Particles.astro";
+import BrightLayout from "@/layouts/BrightLayout.astro";
+
+import betterLogo from "@/assets/better-logo-gray.svg";
+import socialSotvoril from "@/assets/social_sotvoril.png";
+import socialCic from "@/assets/social_cic.svg";
+import imgMe from "@/assets/img_me.png";
+import imgCoin from "@/assets/img_coin.png";
+
+const head = {
+	title: "Donate for a Better Tomorrow",
+};
+---
+
+<BrightLayout head={head}>
+	<div class="Header">
+		<Image src={betterLogo} alt="Better Tomorrow" />
+	</div>
+	<div class="Donate">
+		<div class="Donate_header">
+			<h1>
+				Give a coin
+				<div class="Donate_coin">
+					<Particles particleImage={imgCoin.src}>
+						<Image src={imgCoin} width={64} height={64} alt="" />
+					</Particles>
+				</div>
+			</h1>
+		</div>
+
+		<div class="Donate_col _l">
+			<div class="Donate_face">
+				<Image src={imgMe} alt="Alexander Litivinovich" />
+			</div>
+
+			<div class="Donate_speech">
+				Hello!<br />I am Sasha, a developer and designer, creating
+				products that make users' lives a little better.
+			</div>
+		</div>
+
+		<div class="Donate_col _r">
+			<p>
+				If my projects help you, I would appreciate your support — it
+				allows me to focus on developing new solutions.
+			</p>
+
+			<div class="Donate_accountGroup">
+				<DonateAccount
+					key="Buy me a Coffee"
+					value="bettertomorrow"
+					url="https://buymeacoffee.com/bettertomorrow?utm_source=donate"
+				/>
+				<DonateAccount key="T-Bank" value="+7 906 271 96 64" />
+				<DonateAccount key="YooMoney" value="4100 1462 9953 432" />
+				<DonateAccount key="Revolut" value="@bettertomorrow" />
+				<DonateAccount
+					vertical={true}
+					key="USDT TRC"
+					value="0x1b9C0204b505329A9b56942c65fb04257fdd3C15"
+				/>
+			</div>
+
+			<div class="Donate_otherSupport">
+				<div class="Donate_otherSupportNarrative">
+					<h4>No money?</h4>
+					<p>Subscribe to the channels, like posts and videos:</p>
+				</div>
+				<div class="Donate_accountGroup">
+					<SocialAccount
+						name="Sohranil"
+						net="Telegram"
+						url="https://t.me/sohranil?utm_source=donate"
+						src={socialSotvoril}
+					/>
+					<SocialAccount
+						name="Cuz I Can"
+						net="YouTube"
+						url="https://www.youtube.com/@cuz_i_can_dev?utm_source=donate"
+						src={socialCic}
+					/>
+				</div>
+			</div>
+		</div>
+	</div>
+</BrightLayout>
+
+<style>
+	.Header {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		height: 120px;
+	}
+
+	.Donate p,
+	.Donate h1,
+	.Donate h2,
+	.Donate h3,
+	.Donate h4 {
+		padding: 0;
+		margin: 0;
+	}
+
+	.Donate {
+		display: grid;
+		width: min-content;
+		margin: 0 auto;
+		grid-template-areas:
+			"h h"
+			"l r";
+		grid-template-columns: 1fr 1fr;
+		grid-template-rows: auto auto;
+
+		gap: 40px;
+	}
+
+	.Donate_header {
+		grid-area: h;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.Donate_col._l {
+		grid-area: l;
+	}
+	.Donate_col._r {
+		grid-area: r;
+		gap: 24px;
+	}
+
+	.Donate_col {
+		width: 320px;
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+	}
+
+	.Donate_header h1 {
+		font-weight: 900;
+		font-size: 64px;
+		line-height: 80px;
+		color: transparent;
+		background: linear-gradient(
+			90deg,
+			var(--color-violet) 0%,
+			var(--color-blue) 100%
+		);
+		background-clip: text;
+		padding: 0;
+		margin: 0;
+
+		position: relative;
+	}
+
+	.Donate_coin {
+		width: 64px;
+		height: 64px;
+
+		position: absolute;
+
+		right: -70px;
+		top: 0;
+		overflow: hidden;
+		border-radius: 50%;
+
+		user-select: none;
+		z-index: 10;
+	}
+
+	.Donate_coin::after {
+		content: "";
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background: linear-gradient(
+			90deg,
+			transparent,
+			rgba(255, 255, 255, 0.4),
+			transparent
+		);
+		transform: skewX(-12deg) translateX(-100%);
+		animation: shine 2s infinite;
+		animation-delay: 3s;
+	}
+
+	@keyframes shine {
+		to {
+			transform: skewX(-12deg) translateX(200%);
+		}
+	}
+
+	.Donate_face {
+		aspect-ratio: 1 / 1.5;
+		background-color: var(--color-paper);
+		border-radius: 9999px;
+		overflow: hidden;
+
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.Donate_face img {
+		height: 100%;
+		width: auto;
+	}
+
+	.Donate_speech {
+		padding: 16px;
+		border-radius: 16px;
+
+		position: relative;
+		--border-width-default: 2px;
+		--border-gradientFrom-default: var(--color-violet);
+		--border-gradientTo-default: var(--color-blue);
+		--border-gradientDirection-default: 180deg;
+	}
+	.Donate_speech::before {
+		content: "";
+		position: absolute;
+		inset: 0;
+		pointer-events: none;
+
+		border-radius: inherit;
+		padding: var(--border-width, var(--border-width-default));
+		background: linear-gradient(
+			var(
+				--border-gradientDirection,
+				var(--border-gradientDirection-default)
+			),
+			var(--border-gradientFrom, var(--border-gradientFrom-default)),
+			var(--border-gradientTo, var(--border-gradientTo-default))
+		);
+		mask:
+			linear-gradient(#fff 0 0) content-box,
+			linear-gradient(#fff 0 0);
+		mask-composite: exclude;
+	}
+
+	.Donate_accountGroup {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+	}
+
+	.Donate_otherSupport {
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+	}
+
+	.Donate_otherSupportNarrative {
+		display: flex;
+		flex-direction: column;
+		gap: 0;
+	}
+</style>
