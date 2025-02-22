@@ -3,17 +3,31 @@ const { texts } = Astro.props as { texts: [] };
 ---
 
 <div class="MicroDesk">
-  {texts.map((text) => <div class="MicroDesk_text">{text}</div>)}
+  <div class="MicroDesk_grid">
+    {texts.map((text) => <div class="MicroDesk_text">{text}</div>)}
+  </div>
 </div>
 
 <style>
   .MicroDesk {
+    margin: 0 var(--side-paddings);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .MicroDesk_grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 16px;
+  }
 
-    padding-top: 8px;
-    border-top: var(--border-width) solid #fff;
+  .MicroDesk::before {
+    content: "";
+    display: block;
+    background-color: var(--color-white-30);
+    height: var(--border-width);
+    border-radius: calc(var(--border-width) / 2);
   }
 
   .MicroDesk_text {
@@ -23,8 +37,6 @@ const { texts } = Astro.props as { texts: [] };
     font-size: 12px;
     line-height: 14px;
 
-    color: #ffffff;
-
-    opacity: 0.3;
+    color: var(--color-white-30);
   }
 </style>

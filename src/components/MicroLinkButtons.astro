@@ -26,6 +26,8 @@ const { buttons } = Astro.props as { buttons: Button[] };
 
 <style>
   .MicroLinkButtons {
+    margin: 0 var(--side-paddings);
+
     display: flex;
     flex-direction: column;
     padding: 16px;
@@ -50,6 +52,18 @@ const { buttons } = Astro.props as { buttons: Button[] };
     line-height: 32px;
 
     color: var(--color-green);
+    position: relative;
+  }
+
+  .MicroLinkButtons_label::before {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    border-style: solid;
+    border-width: 4px;
+    border-color: var(--color-green) var(--color-green) transparent transparent;
   }
 
   .MicroLinkButtons_desc {
@@ -59,14 +73,41 @@ const { buttons } = Astro.props as { buttons: Button[] };
     font-size: 14px;
     line-height: 16px;
 
-    color: #ffffff;
-
-    opacity: 0.5;
+    color: var(--color-white-50);
   }
 
   .MicroLinkButtons_separator {
     height: 1px;
-    background-color: #fff;
-    opacity: 0.2;
+    background-color: var(--color-white-20);
+  }
+
+  @media (pointer: fine) {
+    .MicroLinkButtons_label {
+      transition: all 0.2s ease-in-out;
+    }
+
+    .MicroLinkButtons_button:hover .MicroLinkButtons_label {
+      animation: text-blink 400ms ease-in-out infinite;
+    }
+
+    .MicroLinkButtons_button:hover .MicroLinkButtons_label::before {
+      border-color: var(--color-white-30) var(--color-white-30) transparent
+        transparent;
+    }
+  }
+
+  @keyframes text-blink {
+    0% {
+      color: var(--color-green);
+      text-shadow: none;
+    }
+    50% {
+      color: var(--color-white);
+      text-shadow: 0 0 16px var(--color-green);
+    }
+    100% {
+      color: var(--color-green);
+      text-shadow: none;
+    }
   }
 </style>

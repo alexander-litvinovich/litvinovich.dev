@@ -5,21 +5,24 @@ import Asterisk from "@/assets/asterisk.svg";
 <div class="MicroMotd">
   <Asterisk class="MicroMotd_asterisk" />
   <p class="MicroMotd_text">
-    Want a fancy micro landing page?<br />
-    <a href="#" target="_blank">Check out GitHub for DIY example</a>
-    <br />or
-    <a href="#" target="_blank">order Design Services</a>
+    Want a fancy micro landing page?
+    <a href="/offering/">Check out GitHub for DIY example</a>
+    or&nbsp;<a href="/offering/">order Design Services</a>
   </p>
 </div>
 
 <style>
   .MicroMotd {
+    margin: 0 var(--side-paddings);
+
     display: flex;
     flex-direction: row;
     align-items: center;
     gap: 8px;
 
-    color: rgba(255, 255, 255, 0.3);
+    color: var(--color-white-30);
+
+    /* max-width: 400px; */
   }
 
   .MicroMotd_asterisk {
@@ -41,5 +44,16 @@ import Asterisk from "@/assets/asterisk.svg";
   .MicroMotd_text a {
     color: var(--color-blue);
     text-decoration: none;
+
+    transition: all 250ms ease-in-out;
+  }
+
+  @media (pointer: fine) {
+    .MicroMotd_text a:hover {
+      color: var(--color-white-30);
+      text-shadow:
+        0 0 5px var(--color-blue),
+        0 0 0px var(--color-blue);
+    }
   }
 </style>

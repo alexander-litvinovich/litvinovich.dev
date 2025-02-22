@@ -2,7 +2,6 @@
 import { Image } from "astro:assets";
 
 import DarkLayout from "@/layouts/DarkLayout.astro";
-import AppIcon from "@/components/AppIcon.astro";
 
 import MicroCard from "@/components/MicroCard.astro";
 import MicroSocialLinks from "@/components/MicroSocialLinks.astro";
@@ -12,46 +11,55 @@ import MicroMotd from "@/components/MicroMotd.astro";
 import MicroDate from "@/components/MicroDate.astro";
 import MicroGlyph from "@/components/MicroGlyph.astro";
 
-import logoHero from "@/assets/better-tomorrow-hero.png";
-
-import projectIconBT from "@/assets/project_icon_bt.png";
-import projectIconMindsweeper from "@/assets/project_icon_mindsweeper.png";
-import uglyIcon from "@/assets/social_cic.svg";
-
 const SOCIAL_LINKS = [
   {
     label: "LinkedIn",
-    href: "#",
+    href: "https://www.linkedin.com/in/alexander-litvinovich/",
   },
   {
     label: "Telegram",
-    href: "#",
+    href: "https://t.me/alexander_litvinovich",
   },
   {
     label: "Instagram",
-    href: "#",
+    href: "https://www.instagram.com/alexander.litvinovich/",
   },
   {
     label: "GitHub",
-    href: "#",
+    href: "https://github.com/alexander-litvinovich",
   },
 ];
 
 const BUTTONS = [
   {
-    label: "Sohranil",
+    label: "C0XPAHNЛ (RU)",
     href: "#",
-    desc: "Telegram blog",
+    desc: "Telegram channel",
   },
   {
-    label: "Sohranil",
+    label: "Cuz I Can!",
     href: "#",
-    desc: "Telegram blog",
+    desc: "YouTube",
   },
   {
-    label: "Sohranil",
+    label: "Private Consulting",
     href: "#",
-    desc: "Telegram blog",
+    desc: "Offerings, from 30 €/hr + Tax",
+  },
+  {
+    label: "Better Tomorrow",
+    href: "#",
+    desc: "Indie hacker’s products portfolio",
+  },
+  {
+    label: "Mind Sweeper",
+    href: "#",
+    desc: "Mindfulness App",
+  },
+  {
+    label: "SUPPORT",
+    href: "#",
+    desc: "Info on how to support my work",
   },
 ];
 

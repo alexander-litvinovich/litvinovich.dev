@@ -22,6 +22,8 @@ const { links } = Astro.props as { links: Link[] };
 
 <style>
   .MicroSocialLinks {
+    margin: 0 var(--side-paddings);
+
     display: flex;
     flex-direction: column;
     gap: 16px;
@@ -34,9 +36,7 @@ const { links } = Astro.props as { links: Link[] };
     font-size: 12px;
     line-height: 14px;
 
-    color: #ffffff;
-
-    opacity: 0.3;
+    color: var(--color-white-30);
   }
   .MicroSocialLinks_grid {
     display: grid;
@@ -79,9 +79,59 @@ const { links } = Astro.props as { links: Link[] };
 
   .MicroSocialLinks_link::after {
     height: var(--border-width);
+    border-radius: calc(var(--border-width) / 2);
     background-color: var(--color-green);
   }
 
+  @media (pointer: fine) {
+    .MicroSocialLinks_link {
+      transition: all 0.2s ease-in-out;
+    }
+
+    .MicroSocialLinks_link:hover {
+      animation: text-blink 400ms ease-in-out infinite;
+    }
+
+    .MicroSocialLinks_link:hover::after {
+      animation: blink 400ms ease-in-out infinite;
+    }
+
+    .MicroSocialLinks_link:hover::before {
+      border-color: var(--color-white-30) var(--color-white-30) transparent
+        transparent;
+    }
+  }
+
   .MicroSocialLinks_label {
+  }
+
+  @keyframes blink {
+    0% {
+      background-color: var(--color-green);
+      box-shadow: none;
+    }
+    50% {
+      background-color: var(--color-white);
+      box-shadow: 0 0 16px var(--color-green);
+    }
+    100% {
+      background-color: var(--color-green);
+      box-shadow: none;
+    }
+  }
+
+  @keyframes text-blink {
+    0% {
+      color: var(--color-green);
+      text-shadow: none;
+    }
+    50% {
+      color: var(--color-white);
+      text-shadow: 0 0 16px var(--color-green);
+    }
+    100% {
+      color: var(--color-green);
+      text-shadow: none;
+    }
   }
 </style>

@@ -2,42 +2,161 @@
 import QRCode from "@/assets/qr_code.svg";
 import MicroAvatar from "@/components/MicroAvatar.astro";
 
-const name = "Alexander “Saša” Litvinovich";
+const name = "Alexander “Saša” Litvinovich";
 const desc = ["Designer", "SWE", "Aspiring PM"];
 const email = "litvinovich.alexander@gmail.com";
 ---
 
-<div class="MicroCard">
-  <MicroAvatar />
+<>
+  <input type="checkbox" class="_qrState" id="_qrState" />
+  <div class="MicroCard">
+    <div class="MicroCard_avatar">
+      <MicroAvatar />
+    </div>
 
-  <div class="MicroCard_qr">
-    <QRCode />
-  </div>
-  <div class="MicroCard_name">{name}</div>
-  <div class="MicroCard_desc">
-    {
-      desc.map((text, index) => (
-        <>
-          <span class="MicroCard_descText">{text}</span>
-          {index < desc.length - 1 && (
-            <span class="MicroCard_descSeparator">×</span>
-          )}
-        </>
-      ))
-    }
-  </div>
-  <a class="MicroCard_email" href={"mailto:" + email}>{email}</a>
-</div>
+    <label for="_qrState" class="MicroCard_dim"></label>
 
+    <label for="_qrState" class="MicroCard_qr">
+      <QRCode />
+    </label>
+    <div class="MicroCard_name">{name}</div>
+    <div class="MicroCard_desc">
+      {
+        desc.map((text, index) => (
+          <>
+            <span class="MicroCard_descText">{text}</span>
+            {index < desc.length - 1 && (
+              <span class="MicroCard_descSeparator">×</span>
+            )}
+          </>
+        ))
+      }
+    </div>
+    <a class="MicroCard_email" href={"mailto:" + email}>{email}</a>
+  </div>
+</>
 <style>
+  #_qrState {
+    display: none;
+  }
+
   .MicroCard {
     display: flex;
     flex-direction: column;
     gap: 8px;
+
+    padding: 0 var(--side-paddings);
+
+    padding-top: 300px;
+    position: relative;
+    box-sizing: border-box;
+    overflow: hidden;
+
+    transition: margin 0.3s ease;
+
+    user-select: none;
+  }
+
+  .MicroCard_dim {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    cursor: zoom-out;
+  }
+
+  @media (max-width: 640px) {
+    #_qrState:checked + .MicroCard .MicroCard_dim {
+      display: block;
+    }
+    .MicroCard_dim {
+      background-color: rgb(0, 0, 0, 0.5);
+    }
+  }
+
+  @media (min-width: 640px) {
+    .MicroCard {
+      overflow: visible;
+    }
+
+    #_qrState:checked + .MicroCard .MicroCard_avatar.MicroCard_avatar {
+      left: var(--side-paddings);
+    }
+  }
+
+  @media (min-height: 800px) and (min-width: 640px) {
+    .MicroCard {
+      margin-top: 100px;
+    }
+  }
+
+  .MicroCard_avatar {
+    --avatar-size: 200px;
+
+    top: calc(2 * var(--side-paddings));
+    left: var(--side-paddings);
+    width: var(--avatar-size);
+    height: var(--avatar-size);
+
+    position: absolute;
+
+    transition: left 150ms ease;
+    /* outline: 1px solid red; */
   }
 
   .MicroCard_qr {
+    display: flex;
     color: var(--color-green);
+    position: absolute;
+    top: var(--side-paddings);
+    right: var(--side-paddings);
+
+    z-index: 2;
+    background-color: transparent;
+    box-sizing: border-box;
+
+    transition: width 250ms ease-in-out;
+
+    transition-property: width, height;
+
+    cursor: zoom-in;
+  }
+
+  .MicroCard_qr > svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  #_qrState:checked + .MicroCard .MicroCard_qr {
+    /* position: fixed; */
+
+    /* width: calc(100% - 2 * var(--side-paddings)); */
+    width: 240px;
+
+    aspect-ratio: 1;
+    top: var(--side-paddings);
+    right: var(--side-paddings);
+
+    z-index: 11;
+
+    padding: 24px;
+
+    border-radius: 24px;
+
+    background-color: rgb(0, 0, 0, 0.5);
+    cursor: zoom-out;
+    /* width: 240px;
+    height: 240px; */
+  }
+
+  #_qrState:checked + .MicroCard .MicroCard_avatar {
+    /* transform: scale(0.8); */
+    /* opacity: 0.1; */
+    /* : 100px; */
+    left: calc(-1 * var(--side-paddings) - var(--avatar-size));
   }
 
   .MicroCard_name {
@@ -47,7 +166,15 @@ const email = "litvinovich.alexander@gmail.com";
     font-size: 30px;
     line-height: 32px;
 
-    color: #ffffff;
+    color: var(--color-white);
+
+    z-index: 2;
+  }
+
+  .MicroCard_desc {
+    display: flex;
+    flex-direction: row;
+    gap: 0.4em;
   }
 
   .MicroCard_descText,
@@ -58,11 +185,15 @@ const email = "litvinovich.alexander@gmail.com";
     font-size: 14px;
     line-height: 24px;
 
-    color: #ffffff;
+    z-index: 2;
+  }
+
+  .MicroCard_descText {
+    color: var(--color-white);
   }
 
   .MicroCard_descSeparator {
-    opacity: 0.2;
+    color: var(--color-white-30);
   }
 
   .MicroCard_email {
@@ -72,8 +203,14 @@ const email = "litvinovich.alexander@gmail.com";
     font-size: 14px;
     line-height: 24px;
 
-    color: #ffffff;
+    color: var(--color-white-30);
+    text-decoration: none;
+    z-index: 2;
+  }
 
-    opacity: 0.5;
+  @media (pointer: fine) {
+    .MicroCard_email:hover {
+      color: var(--color-blue);
+    }
   }
 </style>

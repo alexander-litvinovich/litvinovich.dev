@@ -1,0 +1,120 @@
+---
+const {
+  label,
+  url = "",
+  newWindow = true,
+  intent = "neutral",
+  variant = "primary",
+} = Astro.props;
+
+const Element = url.length ? "a" : "button";
+---
+
+<Element
+  href={url}
+  class:list={["MicroButton", `_${intent}`, `_${variant}`]}
+  target={newWindow ? "_blank" : "_self"}
+>
+  {label}
+</Element>
+
+<style>
+  ._neutral {
+    --active-color: var(--color-white);
+    --compliment-color: var(--color-black);
+    --hover-compliment-color: var(--color-blue);
+  }
+
+  ._active {
+    --active-color: var(--color-blue);
+    --compliment-color: var(--color-white);
+    --hover-compliment-color: var(--color-white);
+  }
+
+  ._success {
+    --active-color: var(--color-green);
+    --compliment-color: var(--color-black);
+    --hover-compliment-color: var(--color-white);
+  }
+
+  .MicroButton {
+    display: inline-flex;
+
+    border-width: 2px;
+    border-style: solid;
+    border-radius: 4px;
+    padding: 10px 14px;
+    text-wrap: nowrap;
+
+    text-align: center;
+
+    font-family: "Roboto Mono", serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: -0.03em;
+
+    transition: all 200ms ease;
+
+    user-select: none;
+  }
+
+  .MicroButton:active {
+    transform: scale(0.95);
+  }
+
+  ._primary {
+    color: var(--compliment-color);
+    background-color: var(--active-color);
+    border-color: var(--active-color);
+  }
+  ._secondary {
+    color: var(--active-color);
+    background-color: transparent;
+    border-color: var(--active-color);
+  }
+  ._tertiary {
+  }
+
+  @media (pointer: fine) {
+    ._primary:hover {
+      animation: blink-primary 400ms ease-in-out infinite;
+    }
+    ._secondary:hover {
+      animation: blink-secondary 400ms ease-in-out infinite;
+    }
+  }
+
+  @keyframes blink-primary {
+    0% {
+      box-shadow: none;
+    }
+    50% {
+      box-shadow: 0 0 16px var(--active-color);
+    }
+    100% {
+      box-shadow: none;
+    }
+  }
+
+  @keyframes blink-secondary {
+    0% {
+      box-shadow: none;
+      text-shadow: none;
+    }
+    50% {
+      box-shadow:
+        0 0 16px var(--active-color),
+        inset 0 0 16px var(--active-color);
+      text-shadow: 0 0 8px var(--active-color);
+      border-color: var(--hover-compliment-color);
+      color: var(--hover-compliment-color);
+    }
+    100% {
+      box-shadow: none;
+      text-shadow: none;
+    }
+  }
+</style>
