@@ -1,6 +1,8 @@
 # Micro Landing Page
 
-- [ ] Workbox https://rumaan.dev/blog/workbox-astro-project
+- [ ] Add a Snippet image for sharing
+- [ ] Workbox
+  - [ ] Setup SW https://rumaan.dev/blog/workbox-astro-project
 - [ ] Write readme
 - [ ] Write offerings
   - [ ] Write offerings in README

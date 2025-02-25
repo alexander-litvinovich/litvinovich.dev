@@ -27,10 +27,10 @@ const { buttons } = Astro.props as { buttons: Button[] };
 <style>
   .MicroLinkButtons {
     margin: 0 var(--side-paddings);
+    padding: 16px;
 
     display: flex;
     flex-direction: column;
-    padding: 16px;
     gap: 16px;
 
     background-color: #111;
@@ -45,22 +45,22 @@ const { buttons } = Astro.props as { buttons: Button[] };
   }
 
   .MicroLinkButtons_label {
+    position: relative;
     font-family: "Roboto Mono";
-    font-style: normal;
-    font-weight: 700;
     font-size: 24px;
+    font-weight: 700;
     line-height: 32px;
 
     color: var(--color-green);
-    position: relative;
+    font-style: normal;
   }
 
   .MicroLinkButtons_label::before {
-    content: "";
-    display: block;
     position: absolute;
     top: 0;
     right: 0;
+    display: block;
+    content: "";
     border-style: solid;
     border-width: 4px;
     border-color: var(--color-green) var(--color-green) transparent transparent;
@@ -68,12 +68,12 @@ const { buttons } = Astro.props as { buttons: Button[] };
 
   .MicroLinkButtons_desc {
     font-family: "Georgia";
-    font-style: italic;
-    font-weight: 400;
     font-size: 14px;
+    font-weight: 400;
     line-height: 16px;
 
     color: var(--color-white-50);
+    font-style: italic;
   }
 
   .MicroLinkButtons_separator {

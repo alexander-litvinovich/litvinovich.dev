@@ -1,0 +1,191 @@
+---
+// Donation page
+
+import { Image } from "astro:assets";
+
+import MicroChatBubble from "@/components/MicroChatBubble.astro";
+import MicroAccLinks from "@/components/MicroAccLinks.astro";
+import MicroDonateAccs from "@/components/MicroDonateAccs.astro";
+import MicroDate from "@/components/MicroDate.astro";
+import Particles from "@/components/Particles.astro";
+import DarkLayout from "@/layouts/DarkLayout.astro";
+
+import socialSotvoril from "@/assets/social_sotvoril.png";
+import socialCic from "@/assets/social_cic.svg";
+import avatar from "@/assets/avatar.png";
+
+import imgCoin from "@/assets/img_coin.png";
+
+const head = {
+  title: "Donate for a Better Tomorrow",
+};
+
+const ACCOUNT_LINKS = [
+  {
+    href: "https://t.me/sohranil?utm_source=donate",
+    label: "C0XPAHNЛ (RU)",
+    networkLabel: "Telegram",
+    iconSrc: socialSotvoril,
+  },
+  {
+    href: "https://www.youtube.com/@cuz_i_can_dev?utm_source=donate",
+    label: "Cuz I Can!",
+    networkLabel: "YouTube",
+    iconSrc: socialCic,
+  },
+];
+
+const DONATE_ACCS = [
+  {
+    name: "Buy me a Coffee",
+    id: "bettertomorrow",
+    idHref: "https://buymeacoffee.com/bettertomorrow?utm_source=donate",
+  },
+  {
+    name: "Revolut",
+    id: "@bettertomorrow",
+  },
+  {
+    name: "T-Bank",
+    id: "+7 906 271 96 64",
+  },
+  {
+    name: "YooMoney",
+    id: "4100 1462 9953 432",
+  },
+  {
+    name: "USDT TRC",
+    id: "0x1b9C0204b505329A9b56942c65fb04257fdd3C15",
+    vertical: true,
+  },
+];
+---
+
+<DarkLayout head={head} showGrid={true}>
+  <div class="Donate">
+    <div class="Donate_header">
+      <div class="Donate_coin">
+        <Particles particleImage={imgCoin.src}>
+          <Image src={imgCoin} alt="" />
+        </Particles>
+      </div>
+      <h1>Donate a coin</h1>
+    </div>
+
+    <MicroChatBubble imgSrc={avatar} />
+
+    <p>
+      If my projects help you, I would appreciate your support — it allows me to
+      focus on developing new solutions.
+    </p>
+
+    <MicroDonateAccs donateAccounts={DONATE_ACCS} />
+
+    <MicroAccLinks
+      accountLinks={ACCOUNT_LINKS}
+      header="No money?"
+      body="Subscribe to the channels, like posts and videos:"
+    />
+  </div>
+  <MicroDate />
+</DarkLayout>
+
+<style>
+  .Donate p,
+  .Donate h1,
+  .Donate h2,
+  .Donate h3,
+  .Donate h4 {
+    margin: 0;
+    padding: 0;
+  }
+
+  .Donate {
+    padding: 0 var(--side-paddings);
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  .Donate_header {
+    padding-top: 80px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: start;
+    justify-content: center;
+  }
+
+  .Donate_header h1 {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    display: inline;
+    font-size: 64px;
+    font-weight: 900;
+    line-height: 64px;
+    color: transparent;
+    background: linear-gradient(
+      90deg,
+      var(--color-violet) 0%,
+      var(--color-blue) 100%
+    );
+    background-clip: text;
+  }
+
+  .Donate_coin {
+    position: relative;
+    z-index: 10;
+    width: 80px;
+    height: 80px;
+    display: inline-flex;
+
+    overflow: hidden;
+    border-radius: 50%;
+
+    user-select: none;
+  }
+  .Donate_coin img {
+    width: 100%;
+    height: 100%;
+  }
+
+  .Donate_coin::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.4),
+      transparent
+    );
+    transform: skewX(-12deg) translateX(-100%);
+    animation: shine 2s infinite;
+    animation-delay: 3s;
+  }
+
+  @keyframes shine {
+    to {
+      transform: skewX(-12deg) translateX(200%);
+    }
+  }
+
+  .Donate_face {
+    display: flex;
+    overflow: hidden;
+    background-color: var(--color-paper);
+    border-radius: 9999px;
+    aspect-ratio: 1 / 1.5;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .Donate_face img {
+    width: auto;
+    height: 100%;
+  }
+</style>

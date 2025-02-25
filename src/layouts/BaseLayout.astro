@@ -1,8 +1,13 @@
 ---
-import appleTouchIcon from "@/assets/favicon/apple-touch-icon.png";
 import "@/assets/ui.css";
-import icon16 from "@/assets/favicon/favicon-16x16.png";
-import icon32 from "@/assets/favicon/favicon-32x32.png";
+import faviconSvg from "@/assets/favicon.svg";
+import favicon from "@/assets/favicon.ico";
+import favicon96 from "@/assets/favicon-96.png";
+import favicon192 from "@/assets/favicon-192.png";
+
+import { pwaInfo } from "virtual:pwa-info";
+
+import pwa from "@/pwa";
 
 const {
   head = {
@@ -17,14 +22,20 @@ const {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="apple-touch-icon" sizes="180x180" href={appleTouchIcon.src} />
-    <link rel="icon" type="image/png" sizes="32x32" href={icon32.src} />
-    <link rel="icon" type="image/png" sizes="16x16" href={icon16.src} />
 
-    <meta name="msapplication-TileColor" content="#26242F" />
-    <meta name="theme-color" content="#26242F" />
+    <link rel="icon" type="image/png" href={favicon96.src} sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href={faviconSvg.src} />
+    <link rel="shortcut icon" href={favicon} />
+    <link rel="apple-touch-icon" sizes="192x192" href={favicon192.src} />
+    <meta name="apple-mobile-web-app-title" content={head.title} />
+
+    <meta name="msapplication-TileColor" content="#111111" />
+    <meta name="theme-color" content="#111111" />
     <meta name="generator" content={Astro.generator} />
     <title>{head.title}</title>
+
+    <!-- <script src={pwa.src}></script> -->
+    {pwaInfo && <Fragment set:html={pwaInfo.webManifest.linkTag} />}
   </head>
   <body>
     <slot />

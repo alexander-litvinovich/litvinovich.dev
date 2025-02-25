@@ -1,0 +1,74 @@
+---
+import { Image } from "astro:assets";
+
+const { body, imgSrc } = Astro.props;
+---
+
+<div class="MicroChatBubble">
+  <div class="MicroChatBubble_image">
+    <Image src={imgSrc} alt="" />
+  </div>
+  <div class="MicroChatBubble_wrapper">
+    <div class="MicroChatBubble_bubble">
+      <p>
+        Hello!<br />I am Sasha, a developer and designer, creating products that
+        make users' lives a little better.
+      </p>
+    </div>
+  </div>
+</div>
+
+<style>
+  .MicroChatBubble {
+    display: grid;
+    grid-template-columns: auto 1fr;
+
+    gap: 16px;
+  }
+
+  .MicroChatBubble p {
+    margin: 0;
+    padding: 0;
+  }
+
+  .MicroChatBubble_image {
+    width: 48px;
+    height: 48px;
+    overflow: hidden;
+    background-color: var(--color-paper);
+    border-radius: 50%;
+  }
+  .MicroChatBubble_image img {
+    width: 100%;
+    height: 100%;
+  }
+  .MicroChatBubble_bubble {
+
+    position: relative;
+    padding: 16px;
+    display: flex;
+    border-radius: 0 16px 16px 16px;
+    --border-width-default: 2px;
+    --border-gradientFrom-default: var(--color-violet);
+    --border-gradientTo-default: var(--color-blue);
+    --border-gradientDirection-default: 180deg;
+  }
+  .MicroChatBubble_bubble::before {
+    position: absolute;
+    padding: var(--border-width, var(--border-width-default));
+    background: linear-gradient(
+      var(--border-gradientDirection, var(--border-gradientDirection-default)),
+      var(--border-gradientFrom, var(--border-gradientFrom-default)),
+      var(--border-gradientTo, var(--border-gradientTo-default))
+    );
+
+    border-radius: inherit;
+    pointer-events: none;
+    content: "";
+    inset: 0;
+    mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+  }
+</style>

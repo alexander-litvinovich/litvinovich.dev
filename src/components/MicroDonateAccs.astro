@@ -1,0 +1,118 @@
+---
+import IconArrow from "../assets/icon-arrow.svg";
+
+interface DonateAccount {
+  name: string;
+  id: string;
+  vertical?: boolean;
+  idHref?: string;
+}
+
+const { donateAccounts } = Astro.props as { donateAccounts: DonateAccount[] };
+---
+
+<div class="MicroDonateAccs">
+  {
+    donateAccounts.map((acc, index) => {
+      const Element = acc.idHref ? "a" : "div";
+
+      return (
+        <>
+          <Element
+            class:list={[
+              "MicroDonateAccs_acc",
+              { _vertical: acc.vertical },
+              { _link: acc.idHref },
+            ]}
+            href={acc.idHref}
+            target="_blank"
+          >
+            <span class="MicroDonateAccs_name">{acc.name}:</span>
+            <span class="MicroDonateAccs_id">
+              {acc.id}
+              {acc.idHref && <IconArrow />}
+            </span>
+          </Element>
+          {index < donateAccounts.length - 1 && (
+            <div class="MicroDonateAccs_separator" />
+          )}
+        </>
+      );
+    })
+  }
+</div>
+
+<style>
+  .MicroDonateAccs {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    background-color: var(--color-paper);
+    border-radius: 16px;
+  }
+
+  .MicroDonateAccs_acc {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    gap: 4px;
+    color: var(--color-white-50);
+    text-decoration: none;
+  }
+
+  .MicroDonateAccs_separator {
+    height: 1px;
+    background-color: var(--color-white-20);
+  }
+
+  .MicroDonateAccs_id {
+    text-align: left;
+    word-break: break-all;
+  }
+
+  .MicroDonateAccs_name {
+    font-family: "Georgia";
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 24px;
+    font-style: italic;
+  }
+
+  .MicroDonateAccs_id {
+    font-family: "Roboto Mono";
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 32px;
+
+    color: var(--color-white-80);
+    font-style: normal;
+
+    vertical-align: baseline;
+  }
+
+  .MicroDonateAccs_acc._link .MicroDonateAccs_id {
+    color: var(--color-green);
+  }
+
+  @media (pointer: fine) {
+    .MicroDonateAccs_acc._link:hover .MicroDonateAccs_id {
+      animation: blink 400ms ease-in-out infinite;
+    }
+  }
+
+  @keyframes blink {
+    0% {
+      color: var(--color-green);
+      text-shadow: none;
+    }
+    50% {
+      color: var(--color-white);
+      text-shadow: 0 0 16px var(--color-green);
+    }
+    100% {
+      color: var(--color-green);
+      text-shadow: none;
+    }
+  }
+</style>

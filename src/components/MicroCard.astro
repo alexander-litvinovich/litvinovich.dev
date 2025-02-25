@@ -41,30 +41,36 @@ const email = "litvinovich.alexander@gmail.com";
   }
 
   .MicroCard {
+    /* Positioning & Layout */
+    position: relative;
+    margin: 0;
+
+    /* Box Model & Sizing */
+    padding: 0 var(--side-paddings);
+    padding-top: 300px;
+    box-sizing: border-box;
+
+    /* Display & Visibility */
     display: flex;
     flex-direction: column;
     gap: 8px;
-
-    padding: 0 var(--side-paddings);
-
-    padding-top: 300px;
-    position: relative;
-    box-sizing: border-box;
     overflow: hidden;
 
+    /* Transitions & Animations */
     transition: margin 0.3s ease;
 
+    /* Misc */
     user-select: none;
   }
 
   .MicroCard_dim {
-    display: none;
     position: fixed;
     top: 0;
     left: 0;
+    z-index: 10;
     width: 100%;
     height: 100%;
-    z-index: 10;
+    display: none;
     cursor: zoom-out;
   }
 
@@ -96,32 +102,36 @@ const email = "litvinovich.alexander@gmail.com";
   .MicroCard_avatar {
     --avatar-size: 200px;
 
+    position: absolute;
+
     top: calc(2 * var(--side-paddings));
     left: var(--side-paddings);
     width: var(--avatar-size);
     height: var(--avatar-size);
 
-    position: absolute;
-
     transition: left 150ms ease;
-    /* outline: 1px solid red; */
   }
 
   .MicroCard_qr {
-    display: flex;
-    color: var(--color-green);
+    /* Positioning & Layout */
     position: absolute;
     top: var(--side-paddings);
     right: var(--side-paddings);
-
     z-index: 2;
-    background-color: transparent;
     box-sizing: border-box;
 
-    transition: width 250ms ease-in-out;
+    /* Display & Visibility */
+    display: flex;
 
+    /* Visual Styles */
+    color: var(--color-green);
+    background-color: transparent;
+
+    /* Transitions & Animations */
+    transition: width 250ms ease-in-out;
     transition-property: width, height;
 
+    /* Misc */
     cursor: zoom-in;
   }
 
@@ -131,44 +141,36 @@ const email = "litvinovich.alexander@gmail.com";
   }
 
   #_qrState:checked + .MicroCard .MicroCard_qr {
-    /* position: fixed; */
-
-    /* width: calc(100% - 2 * var(--side-paddings)); */
-    width: 240px;
-
-    aspect-ratio: 1;
     top: var(--side-paddings);
     right: var(--side-paddings);
 
     z-index: 11;
 
     padding: 24px;
-
-    border-radius: 24px;
+    width: 240px;
 
     background-color: rgb(0, 0, 0, 0.5);
+
+    border-radius: 24px;
     cursor: zoom-out;
-    /* width: 240px;
-    height: 240px; */
+
+    aspect-ratio: 1;
   }
 
   #_qrState:checked + .MicroCard .MicroCard_avatar {
-    /* transform: scale(0.8); */
-    /* opacity: 0.1; */
-    /* : 100px; */
     left: calc(-1 * var(--side-paddings) - var(--avatar-size));
   }
 
   .MicroCard_name {
+
+    z-index: 2;
     font-family: "Roboto Mono";
-    font-style: normal;
-    font-weight: 700;
     font-size: 30px;
+    font-weight: 700;
     line-height: 32px;
 
     color: var(--color-white);
-
-    z-index: 2;
+    font-style: normal;
   }
 
   .MicroCard_desc {
@@ -179,13 +181,13 @@ const email = "litvinovich.alexander@gmail.com";
 
   .MicroCard_descText,
   .MicroCard_descSeparator {
-    font-family: "Georgia";
-    font-style: normal;
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 24px;
 
     z-index: 2;
+    font-family: "Georgia";
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 24px;
+    font-style: normal;
   }
 
   .MicroCard_descText {
@@ -197,15 +199,17 @@ const email = "litvinovich.alexander@gmail.com";
   }
 
   .MicroCard_email {
+    z-index: 2;
+    width: fit-content;
+    display: inline-block;
     font-family: "Georgia";
-    font-style: italic;
-    font-weight: 400;
     font-size: 14px;
+    font-weight: 400;
     line-height: 24px;
 
     color: var(--color-white-30);
+    font-style: italic;
     text-decoration: none;
-    z-index: 2;
   }
 
   @media (pointer: fine) {

@@ -1,0 +1,88 @@
+{
+  "plugins": [
+    "stylelint-order"
+  ],
+  "rules": {
+    "order/properties-order": [
+      {
+        "groupName": "Positioning & Layout",
+        "properties": [
+          "position",
+          "top",
+          "right",
+          "bottom",
+          "left",
+          "z-index"
+        ]
+      },
+      {
+        "groupName": "Box Model & Sizing",
+        "properties": [
+          "margin",
+          "margin-top",
+          "margin-right",
+          "margin-bottom",
+          "margin-left",
+          "padding",
+          "padding-top",
+          "padding-right",
+          "padding-bottom",
+          "padding-left",
+          "width",
+          "height",
+          "box-sizing"
+        ]
+      },
+      {
+        "groupName": "Display & Visibility",
+        "properties": [
+          "display",
+          "flex",
+          "flex-direction",
+          "flex-wrap",
+          "gap",
+          "visibility",
+          "overflow"
+        ]
+      },
+      {
+        "groupName": "Typography",
+        "properties": [
+          "font-family",
+          "font-size",
+          "font-weight",
+          "line-height",
+          "text-align",
+          "color"
+        ]
+      },
+      {
+        "groupName": "Visual Styles",
+        "properties": [
+          "background",
+          "background-color",
+          "border",
+          "border-radius",
+          "opacity"
+        ]
+      },
+      {
+        "groupName": "Transitions & Animations",
+        "properties": [
+          "transition",
+          "transition-property",
+          "transition-duration",
+          "animation"
+        ]
+      },
+      {
+        "groupName": "Misc",
+        "properties": [
+          "cursor",
+          "user-select",
+          "pointer-events"
+        ]
+      }
+    ]
+  }
+}

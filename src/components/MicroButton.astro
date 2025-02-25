@@ -38,27 +38,27 @@ const Element = url.length ? "a" : "button";
   }
 
   .MicroButton {
+    padding: 10px 14px;
     display: inline-flex;
 
-    border-width: 2px;
-    border-style: solid;
-    border-radius: 4px;
-    padding: 10px 14px;
-    text-wrap: nowrap;
+    font-family: "Roboto Mono", serif;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 24px;
 
     text-align: center;
-
-    font-family: "Roboto Mono", serif;
-    font-optical-sizing: auto;
-    font-style: normal;
-    font-weight: 500;
-    font-size: 16px;
-    line-height: 24px;
-    letter-spacing: -0.03em;
+    border-radius: 4px;
 
     transition: all 200ms ease;
 
     user-select: none;
+
+    border-width: 2px;
+    border-style: solid;
+    text-wrap: nowrap;
+    font-optical-sizing: auto;
+    font-style: normal;
+    letter-spacing: -0.03em;
   }
 
   .MicroButton:active {
