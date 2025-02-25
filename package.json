@@ -17,6 +17,7 @@
   "devDependencies": {
     "@vite-pwa/astro": "^0.5.0",
     "@vitejs/plugin-basic-ssl": "^1.2.0",
+    "postcss-html": "^1.8.0",
     "stylelint": "^16.14.1",
     "stylelint-order": "^6.0.4",
     "vite-plugin-pwa": "^0.21.1"

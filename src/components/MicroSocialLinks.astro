@@ -31,12 +31,12 @@ const { links } = Astro.props as { links: Link[] };
 
   .MicroSocialLinks_hint {
     font-family: "Georgia";
-    font-style: normal;
-    font-weight: 400;
     font-size: 12px;
+    font-weight: 400;
     line-height: 14px;
 
     color: var(--color-white-30);
+    font-style: normal;
   }
   .MicroSocialLinks_grid {
     display: grid;
@@ -45,21 +45,21 @@ const { links } = Astro.props as { links: Link[] };
   }
 
   .MicroSocialLinks_link {
+
+    position: relative;
     display: flex;
     flex-direction: column;
     gap: 6px;
 
-    position: relative;
+    font-family: "Roboto Mono";
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 32px;
+    text-align: left;
 
     color: var(--color-green);
     text-decoration: none;
-    text-align: left;
-
-    font-family: "Roboto Mono";
     font-style: normal;
-    font-weight: 700;
-    font-size: 24px;
-    line-height: 32px;
   }
 
   .MicroSocialLinks_link::before,
@@ -79,8 +79,8 @@ const { links } = Astro.props as { links: Link[] };
 
   .MicroSocialLinks_link::after {
     height: var(--border-width);
-    border-radius: calc(var(--border-width) / 2);
     background-color: var(--color-green);
+    border-radius: calc(var(--border-width) / 2);
   }
 
   @media (pointer: fine) {
