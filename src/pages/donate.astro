@@ -3,12 +3,13 @@
 
 import { Image } from "astro:assets";
 
+import DarkLayout from "@/layouts/DarkLayout.astro";
+import BrickBreakerGame from "@/components/BrickBreakerGame.astro";
 import MicroChatBubble from "@/components/MicroChatBubble.astro";
 import MicroAccLinks from "@/components/MicroAccLinks.astro";
 import MicroDonateAccs from "@/components/MicroDonateAccs.astro";
 import MicroDate from "@/components/MicroDate.astro";
 import Particles from "@/components/Particles.astro";
-import DarkLayout from "@/layouts/DarkLayout.astro";
 
 import socialSotvoril from "@/assets/social_sotvoril.png";
 import socialCic from "@/assets/social_cic.svg";
@@ -64,7 +65,7 @@ const DONATE_ACCS = [
 <DarkLayout head={head} showGrid={true}>
   <div class="Donate">
     <div class="Donate_header">
-      <div class="Donate_coin">
+      <div class="Donate_coin" id="coinClickTarget">
         <Particles particleImage={imgCoin.src}>
           <Image src={imgCoin} alt="" />
         </Particles>
@@ -87,8 +88,48 @@ const DONATE_ACCS = [
       body="Subscribe to the channels, like posts and videos:"
     />
   </div>
+  <BrickBreakerGame />
   <MicroDate />
 </DarkLayout>
+
+<script>
+  let clickCount = 0;
+  const requiredClicks = 5;
+  const timeFrame = 2000; // 2 seconds in milliseconds
+  let firstClickTime: number | null = null;
+
+  const coinElement = document.getElementById("coinClickTarget");
+  const gameContainer = document.querySelector(
+    ".BrickBreakerGame_container"
+  ) as HTMLElement;
+
+  if (coinElement && gameContainer) {
+    coinElement.addEventListener("click", () => {
+      const currentTime = Date.now();
+
+      // Initialize timer on first click
+      if (clickCount === 0) {
+        firstClickTime = currentTime;
+      }
+
+      // Check if we're still within the timeframe
+      if (firstClickTime && currentTime - firstClickTime <= timeFrame) {
+        clickCount++;
+
+        if (clickCount === requiredClicks) {
+          gameContainer.classList.remove("hidden");
+          requestAnimationFrame(() => {
+            gameContainer.style.cssText = "animation: fadeIn 0.5s ease-in;";
+          });
+        }
+      } else {
+        // Reset if clicked outside timeframe
+        clickCount = 1;
+        firstClickTime = currentTime;
+      }
+    });
+  }
+</script>
 
 <style>
   .Donate p,
@@ -144,6 +185,7 @@ const DONATE_ACCS = [
     border-radius: 50%;
 
     user-select: none;
+    cursor: pointer;
   }
   .Donate_coin img {
     width: 100%;
@@ -187,5 +229,14 @@ const DONATE_ACCS = [
   .Donate_face img {
     width: auto;
     height: 100%;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
   }
 </style>

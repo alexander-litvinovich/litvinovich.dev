@@ -1,0 +1,19 @@
+---
+import DarkLayout from "@/layouts/DarkLayout.astro";
+import MicroPiano from "@/components/MicroPiano.astro";
+---
+
+<DarkLayout head={{ title: "Piano" }} showGrid={true}>
+  <div class="Piano_container">
+    <MicroPiano startOctave={4} octaveCount={2} />
+  </div>
+</DarkLayout>
+
+<style>
+  .Piano_container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
+</style>

@@ -35,6 +35,7 @@ personality: Technical, solution-oriented, focused on best practices
 - Implement responsive design patterns
 - Prefer Astro's content collections for managing content
 - Use TypeScript for type safety where appropriate
+- Astro components CSS styles should have the following format `.ComponentName_elementName`
 
 # Preferred Solutions Should
 
