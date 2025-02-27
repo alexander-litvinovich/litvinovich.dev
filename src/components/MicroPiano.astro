@@ -43,40 +43,40 @@
       Array.from({ length: 2 }, (_, i) => (
         <div class="MicroPiano_octave" data-octave={i}>
           <div class="MicroPiano_key" data-note="C">
-            <div class="MicroPiano_shortcut">f</div>
+            <div class="MicroPiano_shortcut" />
           </div>
           <div class="MicroPiano_key _black _cd" data-note="C#">
-            <div class="MicroPiano_shortcut">f</div>
+            <div class="MicroPiano_shortcut" />
           </div>
           <div class="MicroPiano_key" data-note="D">
-            <div class="MicroPiano_shortcut">f</div>
+            <div class="MicroPiano_shortcut" />
           </div>
           <div class="MicroPiano_key _black _dd" data-note="D#">
-            <div class="MicroPiano_shortcut">f</div>
+            <div class="MicroPiano_shortcut" />
           </div>
           <div class="MicroPiano_key" data-note="E">
-            <div class="MicroPiano_shortcut">f</div>
+            <div class="MicroPiano_shortcut" />
           </div>
           <div class="MicroPiano_key" data-note="F">
-            <div class="MicroPiano_shortcut">f</div>
+            <div class="MicroPiano_shortcut" />
           </div>
           <div class="MicroPiano_key _black _fd" data-note="F#">
-            <div class="MicroPiano_shortcut">f</div>
+            <div class="MicroPiano_shortcut" />
           </div>
           <div class="MicroPiano_key" data-note="G">
-            <div class="MicroPiano_shortcut">f</div>
+            <div class="MicroPiano_shortcut" />
           </div>
           <div class="MicroPiano_key _black _gd" data-note="G#">
-            <div class="MicroPiano_shortcut">f</div>
+            <div class="MicroPiano_shortcut" />
           </div>
           <div class="MicroPiano_key" data-note="A">
-            <div class="MicroPiano_shortcut">f</div>
+            <div class="MicroPiano_shortcut" />
           </div>
           <div class="MicroPiano_key _black _ad" data-note="A#">
-            <div class="MicroPiano_shortcut">f</div>
+            <div class="MicroPiano_shortcut" />
           </div>
           <div class="MicroPiano_key" data-note="B">
-            <div class="MicroPiano_shortcut">f</div>
+            <div class="MicroPiano_shortcut" />
           </div>
         </div>
       ))
@@ -124,6 +124,7 @@
       this.initializeOctaveControls();
       this.updateShortcutLabels();
       this.initializeArpeggioControl();
+      this.initializeDrumPads();
     }
 
     private noteToFrequency(note: string): number {
@@ -438,6 +439,162 @@
         });
       }
     }
+
+    private initializeDrumPads() {
+      const kickPad = document.querySelector(".MicroPiano_pad._kick");
+      const snarePad = document.querySelector(".MicroPiano_pad._snare");
+      const clapPad = document.querySelector(".MicroPiano_pad._clap");
+
+      kickPad?.addEventListener("click", () => this.playKick());
+      snarePad?.addEventListener("click", () => this.playSnare());
+      clapPad?.addEventListener("click", () => this.playClap());
+
+      // Add keyboard shortcuts for drums
+      document.addEventListener("keydown", (e) => {
+        if (e.repeat) return;
+
+        switch (e.key.toLowerCase()) {
+          case "8":
+            this.playKick();
+            kickPad?.classList.add("active");
+            break;
+          case "9":
+            this.playSnare();
+            snarePad?.classList.add("active");
+            break;
+          case "0":
+            this.playClap();
+            clapPad?.classList.add("active");
+            break;
+        }
+      });
+
+      document.addEventListener("keyup", (e) => {
+        switch (e.key.toLowerCase()) {
+          case "8":
+            kickPad?.classList.remove("active");
+            break;
+          case "9":
+            snarePad?.classList.remove("active");
+            break;
+          case "0":
+            clapPad?.classList.remove("active");
+            break;
+        }
+      });
+    }
+
+    private playKick() {
+      const oscillator = this.audioContext.createOscillator();
+      const gainNode = this.audioContext.createGain();
+
+      oscillator.frequency.setValueAtTime(150, this.audioContext.currentTime);
+      oscillator.frequency.exponentialRampToValueAtTime(
+        0.01,
+        this.audioContext.currentTime + 0.5
+      );
+
+      gainNode.gain.setValueAtTime(1, this.audioContext.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(
+        0.001,
+        this.audioContext.currentTime + 0.5
+      );
+
+      oscillator.connect(gainNode);
+      gainNode.connect(this.audioContext.destination);
+
+      oscillator.start(this.audioContext.currentTime);
+      oscillator.stop(this.audioContext.currentTime + 0.5);
+    }
+
+    private playSnare() {
+      const bufferSize = this.audioContext.sampleRate * 0.15;
+      const buffer = this.audioContext.createBuffer(
+        1,
+        bufferSize,
+        this.audioContext.sampleRate
+      );
+      const output = buffer.getChannelData(0);
+
+      // White noise
+      for (let i = 0; i < bufferSize; i++) {
+        output[i] = Math.random() * 2 - 1;
+      }
+
+      const noise = this.audioContext.createBufferSource();
+      noise.buffer = buffer;
+
+      const noiseGain = this.audioContext.createGain();
+      noiseGain.gain.setValueAtTime(1, this.audioContext.currentTime);
+      noiseGain.gain.exponentialRampToValueAtTime(
+        0.01,
+        this.audioContext.currentTime + 0.15
+      );
+
+      // Snare body
+      const oscillator = this.audioContext.createOscillator();
+      const oscillatorGain = this.audioContext.createGain();
+
+      oscillator.type = "triangle";
+      oscillator.frequency.setValueAtTime(100, this.audioContext.currentTime);
+      oscillatorGain.gain.setValueAtTime(0.7, this.audioContext.currentTime);
+      oscillatorGain.gain.exponentialRampToValueAtTime(
+        0.01,
+        this.audioContext.currentTime + 0.1
+      );
+
+      noise.connect(noiseGain);
+      oscillator.connect(oscillatorGain);
+      noiseGain.connect(this.audioContext.destination);
+      oscillatorGain.connect(this.audioContext.destination);
+
+      noise.start();
+      oscillator.start();
+      noise.stop(this.audioContext.currentTime + 0.15);
+      oscillator.stop(this.audioContext.currentTime + 0.15);
+    }
+
+    private playClap() {
+      const bufferSize = this.audioContext.sampleRate * 0.1;
+      const buffer = this.audioContext.createBuffer(
+        1,
+        bufferSize,
+        this.audioContext.sampleRate
+      );
+      const output = buffer.getChannelData(0);
+
+      // White noise
+      for (let i = 0; i < bufferSize; i++) {
+        output[i] = Math.random() * 2 - 1;
+      }
+
+      const noise = this.audioContext.createBufferSource();
+      noise.buffer = buffer;
+
+      // Bandpass filter for clap character
+      const bandpass = this.audioContext.createBiquadFilter();
+      bandpass.type = "bandpass";
+      bandpass.frequency.value = 1000;
+      bandpass.Q.value = 1.5;
+
+      const gainNode = this.audioContext.createGain();
+      gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
+      gainNode.gain.linearRampToValueAtTime(
+        1,
+        this.audioContext.currentTime + 0.02
+      );
+      gainNode.gain.exponentialRampToValueAtTime(
+        0.01,
+        this.audioContext.currentTime + 0.1
+      );
+
+      noise.connect(bandpass);
+      bandpass.connect(gainNode);
+      gainNode.connect(this.audioContext.destination);
+
+      noise.start();
+      noise.stop(this.audioContext.currentTime + 0.1);
+    }
   }
 
   // Initialize piano when the component is mounted
@@ -651,5 +808,16 @@
     align-items: center;
     justify-content: center;
     background: none;
+    cursor: pointer;
+    transition: background-color 0.1s;
+  }
+
+  .MicroPiano_pad:focus {
+    outline: none;
+  }
+
+  .MicroPiano_pad.active,
+  .MicroPiano_pad:active {
+    background: var(--color-green);
   }
 </style>
