@@ -388,39 +388,39 @@
     position: fixed;
     top: 0;
     left: 0;
+    z-index: 10;
     width: 100%;
     height: 100%;
     overflow: hidden;
-    z-index: 10;
   }
 
   #gameCanvas {
-    background: #000000aa;
-    display: block;
     margin: 0 auto;
     /* touch-action: none; */
     width: 100%;
     height: 100%;
+    display: block;
+    background: #000000aa;
   }
 
   .BrickBreakerGame_startBtn {
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    z-index: 10;
     padding: 1rem 2rem;
     font-size: 1.5rem;
+    color: white;
     background: linear-gradient(
       90deg,
       var(--color-violet) 0%,
       var(--color-blue) 100%
     );
-    color: white;
     border: none;
     border-radius: 5px;
-    cursor: pointer;
-    z-index: 10;
     transition: all 0.3s;
+    cursor: pointer;
+    transform: translate(-50%, -50%);
   }
 
   .BrickBreakerGame_startBtn:hover {
@@ -435,9 +435,9 @@
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    color: white;
-    font-size: 1.5rem;
     font-family: Arial, sans-serif;
+    font-size: 1.5rem;
+    color: white;
     text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
   }
 
