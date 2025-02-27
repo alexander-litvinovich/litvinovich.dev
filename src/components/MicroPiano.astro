@@ -120,6 +120,9 @@
     private readonly activeArpeggios: Set<string>;
     private readonly keyMap: Record<string, NoteMapping>;
 
+    // Add new property to track active touches
+    private readonly activeTouches: Map<number, Element>;
+
     // Constants
     private static readonly MIN_OCTAVE = 2;
     private static readonly MAX_OCTAVE = 6;
@@ -171,6 +174,9 @@
 
       // Initialize all features
       this.initializeFeatures();
+
+      // Initialize active touches
+      this.activeTouches = new Map();
     }
 
     private initializeBaseNotes(): BaseNotes {
@@ -317,9 +323,7 @@
     }
 
     private initializePiano() {
-      const keys = document.querySelectorAll(".MicroPiano_key");
-
-      keys.forEach((key) => {
+      this.keyElements.forEach((key) => {
         // Mouse events
         key.addEventListener("mousedown", () => {
           const noteWithOctave = this.getNoteWithOctave(key);
@@ -345,23 +349,49 @@
           key.classList.remove("active");
         });
 
-        // Touch events
-        key.addEventListener("touchstart", (e) => {
+        // Update touch events
+        key.addEventListener("touchstart", ((e: TouchEvent) => {
           e.preventDefault();
+          const touch = e.changedTouches[0];
+          if (!touch) return;
+
           const noteWithOctave = this.getNoteWithOctave(key);
           if (noteWithOctave) {
+            this.activeTouches.set(touch.identifier, key);
             this.handleNoteStart(noteWithOctave);
             key.classList.add("active");
           }
-        });
+        }) as EventListener);
 
-        key.addEventListener("touchend", () => {
-          const noteWithOctave = this.getNoteWithOctave(key);
-          if (noteWithOctave) {
-            this.handleNoteEnd(noteWithOctave);
-          }
-          key.classList.remove("active");
-        });
+        key.addEventListener("touchend", ((e: TouchEvent) => {
+          e.preventDefault();
+          Array.from(e.changedTouches).forEach((touch) => {
+            const touchedKey = this.activeTouches.get(touch.identifier);
+            if (touchedKey) {
+              const noteWithOctave = this.getNoteWithOctave(touchedKey);
+              if (noteWithOctave) {
+                this.handleNoteEnd(noteWithOctave);
+              }
+              touchedKey.classList.remove("active");
+              this.activeTouches.delete(touch.identifier);
+            }
+          });
+        }) as EventListener);
+
+        key.addEventListener("touchcancel", ((e: TouchEvent) => {
+          e.preventDefault();
+          Array.from(e.changedTouches).forEach((touch) => {
+            const touchedKey = this.activeTouches.get(touch.identifier);
+            if (touchedKey) {
+              const noteWithOctave = this.getNoteWithOctave(touchedKey);
+              if (noteWithOctave) {
+                this.handleNoteEnd(noteWithOctave);
+              }
+              touchedKey.classList.remove("active");
+              this.activeTouches.delete(touch.identifier);
+            }
+          });
+        }) as EventListener);
       });
 
       // Keyboard events
@@ -392,6 +422,7 @@
 
     private initializeKeyMap(): Record<string, NoteMapping> {
       return {
+        /* lower octave */
         q: { note: "C", octaveOffset: 0 },
         2: { note: "C#", octaveOffset: 0 },
         w: { note: "D", octaveOffset: 0 },
@@ -404,7 +435,7 @@
         y: { note: "A", octaveOffset: 0 },
         7: { note: "A#", octaveOffset: 0 },
         u: { note: "B", octaveOffset: 0 },
-        //
+        /* higher octave */
         z: { note: "C", octaveOffset: 1 },
         s: { note: "C#", octaveOffset: 1 },
         x: { note: "D", octaveOffset: 1 },
@@ -678,6 +709,9 @@
 
       // Close audio context
       this.audioContext.close();
+
+      // Clear active touches
+      this.activeTouches.clear();
     }
   }
 
