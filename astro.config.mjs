@@ -75,7 +75,7 @@ export default defineConfig({
               runtimeCaching: [
                 {
                   urlPattern: /^https:\/\/[^/]+\/.*/,
-                  handler: "CacheFirst",
+                  handler: "NetworkFirst",
                   options: {
                     cacheName: "dev-site-cache",
                     networkTimeoutSeconds: 5,

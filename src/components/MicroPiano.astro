@@ -1,10 +1,5 @@
 ---
-interface Props {
-  startOctave?: number;
-  octaveCount?: number;
-}
-
-const { startOctave = 4, octaveCount = 2 } = Astro.props;
+// Remove the Props interface and props destructuring since we're not using them anymore
 ---
 
 <div class="MicroPiano">
@@ -45,57 +40,42 @@ const { startOctave = 4, octaveCount = 2 } = Astro.props;
   </div>
   <div class="MicroPiano_keyboard">
     {
-      Array.from({ length: octaveCount }, (_, i) => (
-        <div class="MicroPiano_octave">
-          <div class="MicroPiano_key" data-note={`C${startOctave + i}`}>
+      Array.from({ length: 2 }, (_, i) => (
+        <div class="MicroPiano_octave" data-octave={i}>
+          <div class="MicroPiano_key" data-note="C">
             <div class="MicroPiano_shortcut">f</div>
           </div>
-          <div
-            class="MicroPiano_key _black _cd"
-            data-note={`C#${startOctave + i}`}
-          >
+          <div class="MicroPiano_key _black _cd" data-note="C#">
             <div class="MicroPiano_shortcut">f</div>
           </div>
-          <div class="MicroPiano_key" data-note={`D${startOctave + i}`}>
+          <div class="MicroPiano_key" data-note="D">
             <div class="MicroPiano_shortcut">f</div>
           </div>
-          <div
-            class="MicroPiano_key _black _dd"
-            data-note={`D#${startOctave + i}`}
-          >
+          <div class="MicroPiano_key _black _dd" data-note="D#">
             <div class="MicroPiano_shortcut">f</div>
           </div>
-          <div class="MicroPiano_key" data-note={`E${startOctave + i}`}>
+          <div class="MicroPiano_key" data-note="E">
             <div class="MicroPiano_shortcut">f</div>
           </div>
-          <div class="MicroPiano_key" data-note={`F${startOctave + i}`}>
+          <div class="MicroPiano_key" data-note="F">
             <div class="MicroPiano_shortcut">f</div>
           </div>
-          <div
-            class="MicroPiano_key _black _fd"
-            data-note={`F#${startOctave + i}`}
-          >
+          <div class="MicroPiano_key _black _fd" data-note="F#">
             <div class="MicroPiano_shortcut">f</div>
           </div>
-          <div class="MicroPiano_key" data-note={`G${startOctave + i}`}>
+          <div class="MicroPiano_key" data-note="G">
             <div class="MicroPiano_shortcut">f</div>
           </div>
-          <div
-            class="MicroPiano_key _black _gd"
-            data-note={`G#${startOctave + i}`}
-          >
+          <div class="MicroPiano_key _black _gd" data-note="G#">
             <div class="MicroPiano_shortcut">f</div>
           </div>
-          <div class="MicroPiano_key" data-note={`A${startOctave + i}`}>
+          <div class="MicroPiano_key" data-note="A">
             <div class="MicroPiano_shortcut">f</div>
           </div>
-          <div
-            class="MicroPiano_key _black _ad"
-            data-note={`A#${startOctave + i}`}
-          >
+          <div class="MicroPiano_key _black _ad" data-note="A#">
             <div class="MicroPiano_shortcut">f</div>
           </div>
-          <div class="MicroPiano_key" data-note={`B${startOctave + i}`}>
+          <div class="MicroPiano_key" data-note="B">
             <div class="MicroPiano_shortcut">f</div>
           </div>
         </div>
@@ -108,67 +88,91 @@ const { startOctave = 4, octaveCount = 2 } = Astro.props;
   class Piano {
     private audioContext: AudioContext;
     private oscillators: Map<string, OscillatorNode>;
-    private keyMap: { [key: string]: string };
+    private keyMap: { [key: string]: { note: string; octaveOffset: number } };
+    private currentOctave: number;
+    private octaveDisplay: HTMLDivElement;
+    private baseNotes: { [key: string]: number };
+    private isArpeggioEnabled: boolean;
+    private activeArpeggios: Set<string>;
 
     constructor() {
       this.audioContext = new AudioContext();
       this.oscillators = new Map();
-      this.keyMap = {
-        a: "C4",
-        w: "C#4",
-        s: "D4",
-        e: "D#4",
-        d: "E4",
-        f: "F4",
-        t: "F#4",
-        g: "G4",
-        y: "G#4",
-        h: "A4",
-        u: "A#4",
-        j: "B4",
-        k: "C5",
-        o: "C#5",
-        l: "D5",
-        p: "D#5",
-        ";": "E5",
-        "'": "F5",
-        "]": "F#5",
-        "\\": "G5",
+      this.currentOctave = 4; // Starting octave
+      this.octaveDisplay = document.querySelector(".MicroPiano_octaveValue")!;
+      this.noteIndex = 0;
+      // Base frequencies for octave 4
+      this.baseNotes = {
+        C: 261.63,
+        "C#": 277.18,
+        D: 293.66,
+        "D#": 311.13,
+        E: 329.63,
+        F: 349.23,
+        "F#": 369.99,
+        G: 392.0,
+        "G#": 415.3,
+        A: 440.0,
+        "A#": 466.16,
+        B: 493.88,
       };
+
+      this.isArpeggioEnabled = false;
+      this.activeArpeggios = new Set();
+      this.updateKeyMap();
       this.initializePiano();
+      this.initializeOctaveControls();
+      this.updateShortcutLabels();
+      this.initializeArpeggioControl();
     }
 
     private noteToFrequency(note: string): number {
-      const notes = {
-        C4: 261.63,
-        "C#4": 277.18,
-        D4: 293.66,
-        "D#4": 311.13,
-        E4: 329.63,
-        F4: 349.23,
-        "F#4": 369.99,
-        G4: 392.0,
-        "G#4": 415.3,
-        A4: 440.0,
-        "A#4": 466.16,
-        B4: 493.88,
-        C5: 523.25,
-        "C#5": 554.37,
-        D5: 587.33,
-        "D#5": 622.25,
-        E5: 659.25,
-        F5: 698.46,
-        "F#5": 739.99,
-        G5: 783.99,
-        "G#5": 830.61,
-        A5: 880.0,
-        "A#5": 932.33,
-        B5: 987.77,
-      };
-      return notes[note] || 440;
+      const [noteName, octave] = note.split(/(\d+)/).filter(Boolean);
+      const baseFreq = this.baseNotes[noteName];
+      if (!baseFreq) return 440; // Default frequency if note not found
+
+      // Calculate frequency for the given octave
+      // Using the formula: f = f0 * 2^(n-4) where f0 is the frequency in octave 4
+      const octaveDiff = parseInt(octave) - 4;
+      return baseFreq * Math.pow(2, octaveDiff);
     }
 
-    private playNote(note: string) {
+    private getMajorChordNotes(baseNote: string): string[] {
+      const [noteName, octave] = baseNote.split(/(\d+)/).filter(Boolean);
+      const octaveNum = parseInt(octave);
+
+      const noteSequence = [
+        "C",
+        "C#",
+        "D",
+        "D#",
+        "E",
+        "F",
+        "F#",
+        "G",
+        "G#",
+        "A",
+        "A#",
+        "B",
+      ];
+      const baseIndex = noteSequence.indexOf(noteName);
+
+      // Calculate indices for third and fifth, wrapping around the note sequence
+      const thirdIndex = (baseIndex + 4) % 12;
+      const fifthIndex = (baseIndex + 7) % 12;
+
+      // Calculate octave adjustments
+      const thirdOctave = octaveNum + Math.floor((baseIndex + 4) / 12);
+      const fifthOctave = octaveNum + Math.floor((baseIndex + 7) / 12);
+
+      return [
+        baseNote,
+        `${noteSequence[thirdIndex]}${thirdOctave}`,
+        `${noteSequence[fifthIndex]}${fifthOctave}`,
+      ];
+    }
+
+    private playNote(note: string, duration = 1) {
       const oscillator = this.audioContext.createOscillator();
       const gainNode = this.audioContext.createGain();
 
@@ -189,9 +193,59 @@ const { startOctave = 4, octaveCount = 2 } = Astro.props;
       gainNode.connect(this.audioContext.destination);
 
       oscillator.start();
-      oscillator.stop(this.audioContext.currentTime + 1);
+      oscillator.stop(this.audioContext.currentTime + duration);
 
       this.oscillators.set(note, oscillator);
+    }
+
+    private playArpeggio(baseNote: string) {
+      if (this.activeArpeggios.has(baseNote)) return;
+
+      const chordNotes = this.getMajorChordNotes(baseNote);
+      let noteIndex = 0;
+
+      const playNextNote = () => {
+        if (!this.activeArpeggios.has(baseNote)) return;
+
+        this.playNote(chordNotes[noteIndex], 0.3);
+        noteIndex = (noteIndex + 1) % chordNotes.length;
+        setTimeout(playNextNote, 200);
+      };
+
+      this.activeArpeggios.add(baseNote);
+      playNextNote();
+    }
+
+    private handleNoteStart(note: string) {
+      if (this.isArpeggioEnabled) {
+        this.playArpeggio(note);
+      } else {
+        this.playNote(note);
+      }
+    }
+
+    private handleNoteEnd(note: string) {
+      if (this.isArpeggioEnabled) {
+        this.activeArpeggios.delete(note);
+      }
+    }
+
+    private getNoteWithOctave(key: Element): string {
+      const note = key.getAttribute("data-note");
+      const octaveElement = key.closest(".MicroPiano_octave");
+      if (!note || !octaveElement) return "";
+
+      const octaveOffset = parseInt(
+        octaveElement.getAttribute("data-octave") || "0"
+      );
+      return `${note}${this.currentOctave + octaveOffset}`;
+    }
+
+    private getKeyboardNoteWithOctave(keyMapping: {
+      note: string;
+      octaveOffset: number;
+    }): string {
+      return `${keyMapping.note}${this.currentOctave + keyMapping.octaveOffset}`;
     }
 
     private initializePiano() {
@@ -200,57 +254,189 @@ const { startOctave = 4, octaveCount = 2 } = Astro.props;
       keys.forEach((key) => {
         // Mouse events
         key.addEventListener("mousedown", () => {
-          const note = key.getAttribute("data-note");
-          if (note) {
-            this.playNote(note);
+          const noteWithOctave = this.getNoteWithOctave(key);
+          if (noteWithOctave) {
+            this.handleNoteStart(noteWithOctave);
             key.classList.add("active");
           }
         });
 
         key.addEventListener("mouseup", () => {
+          const noteWithOctave = this.getNoteWithOctave(key);
+          if (noteWithOctave) {
+            this.handleNoteEnd(noteWithOctave);
+          }
           key.classList.remove("active");
         });
 
         key.addEventListener("mouseleave", () => {
+          const noteWithOctave = this.getNoteWithOctave(key);
+          if (noteWithOctave) {
+            this.handleNoteEnd(noteWithOctave);
+          }
           key.classList.remove("active");
         });
 
         // Touch events
         key.addEventListener("touchstart", (e) => {
           e.preventDefault();
-          const note = key.getAttribute("data-note");
-          if (note) {
-            this.playNote(note);
+          const noteWithOctave = this.getNoteWithOctave(key);
+          if (noteWithOctave) {
+            this.handleNoteStart(noteWithOctave);
             key.classList.add("active");
           }
         });
 
         key.addEventListener("touchend", () => {
+          const noteWithOctave = this.getNoteWithOctave(key);
+          if (noteWithOctave) {
+            this.handleNoteEnd(noteWithOctave);
+          }
           key.classList.remove("active");
         });
       });
 
-      // Add keyboard events
+      // Keyboard events
       document.addEventListener("keydown", (e) => {
-        const note = this.keyMap[e.key.toLowerCase()];
-        if (note) {
-          // Prevent repeating when key is held
-          if (!e.repeat) {
-            this.playNote(note);
-            // Highlight the corresponding key
-            const key = document.querySelector(`[data-note="${note}"]`);
-            key?.classList.add("active");
-          }
+        const keyMapping = this.keyMap[e.key.toLowerCase()];
+        if (keyMapping && !e.repeat) {
+          const noteWithOctave = this.getKeyboardNoteWithOctave(keyMapping);
+          this.handleNoteStart(noteWithOctave);
+          const key = document.querySelector(
+            `.MicroPiano_octave[data-octave="${keyMapping.octaveOffset}"] [data-note="${keyMapping.note}"]`
+          );
+          key?.classList.add("active");
         }
       });
 
       document.addEventListener("keyup", (e) => {
-        const note = this.keyMap[e.key.toLowerCase()];
-        if (note) {
-          const key = document.querySelector(`[data-note="${note}"]`);
+        const keyMapping = this.keyMap[e.key.toLowerCase()];
+        if (keyMapping) {
+          const noteWithOctave = this.getKeyboardNoteWithOctave(keyMapping);
+          this.handleNoteEnd(noteWithOctave);
+          const key = document.querySelector(
+            `.MicroPiano_octave[data-octave="${keyMapping.octaveOffset}"] [data-note="${keyMapping.note}"]`
+          );
           key?.classList.remove("active");
         }
       });
+    }
+
+    private updateKeyMap() {
+      this.keyMap = {
+        q: { note: "C", octaveOffset: 0 },
+        2: { note: "C#", octaveOffset: 0 },
+        w: { note: "D", octaveOffset: 0 },
+        3: { note: "D#", octaveOffset: 0 },
+        e: { note: "E", octaveOffset: 0 },
+        r: { note: "F", octaveOffset: 0 },
+        5: { note: "F#", octaveOffset: 0 },
+        t: { note: "G", octaveOffset: 0 },
+        6: { note: "G#", octaveOffset: 0 },
+        y: { note: "A", octaveOffset: 0 },
+        7: { note: "A#", octaveOffset: 0 },
+        u: { note: "B", octaveOffset: 0 },
+        //
+        z: { note: "C", octaveOffset: 1 },
+        s: { note: "C#", octaveOffset: 1 },
+        x: { note: "D", octaveOffset: 1 },
+        d: { note: "D#", octaveOffset: 1 },
+        c: { note: "E", octaveOffset: 1 },
+        v: { note: "F", octaveOffset: 1 },
+        g: { note: "F#", octaveOffset: 1 },
+        b: { note: "G", octaveOffset: 1 },
+        h: { note: "G#", octaveOffset: 1 },
+        n: { note: "A", octaveOffset: 1 },
+        j: { note: "A#", octaveOffset: 1 },
+        m: { note: "B", octaveOffset: 1 },
+      };
+    }
+
+    private initializeOctaveControls() {
+      const octaveUp = document.querySelector(".MicroPiano_octaveEdit._up");
+      const octaveDown = document.querySelector(".MicroPiano_octaveEdit._down");
+
+      const handleOctaveUp = () => {
+        if (this.currentOctave < 6) {
+          this.currentOctave++;
+          this.updateOctaveDisplay();
+        }
+      };
+
+      const handleOctaveDown = () => {
+        if (this.currentOctave > 2) {
+          this.currentOctave--;
+          this.updateOctaveDisplay();
+        }
+      };
+
+      // Mouse click handlers
+      octaveUp?.addEventListener("click", handleOctaveUp);
+      octaveDown?.addEventListener("click", handleOctaveDown);
+
+      // Keyboard handlers
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "=" || e.key === "+") {
+          handleOctaveUp();
+        } else if (e.key === "-" || e.key === "_") {
+          handleOctaveDown();
+        }
+      });
+
+      // Initialize display
+      this.updateOctaveDisplay();
+    }
+
+    private updateOctaveDisplay() {
+      if (this.octaveDisplay) {
+        this.octaveDisplay.textContent = this.currentOctave.toString();
+      }
+    }
+
+    private findKeyForNote(noteToFind: string, octaveOffset: number): string {
+      for (const [key, mapping] of Object.entries(this.keyMap)) {
+        if (
+          mapping.note === noteToFind &&
+          mapping.octaveOffset === octaveOffset
+        ) {
+          return key;
+        }
+      }
+      return "";
+    }
+
+    private updateShortcutLabels() {
+      const keys = document.querySelectorAll(".MicroPiano_key");
+      keys.forEach((key) => {
+        const note = key.getAttribute("data-note");
+        const octaveElement = key.closest(".MicroPiano_octave");
+        if (!note || !octaveElement) return;
+
+        const octaveOffset = parseInt(
+          octaveElement.getAttribute("data-octave") || "0"
+        );
+
+        const shortcut = this.findKeyForNote(note, octaveOffset);
+        const shortcutElement = key.querySelector(".MicroPiano_shortcut");
+        if (shortcutElement) {
+          shortcutElement.textContent = shortcut;
+        }
+      });
+    }
+
+    private initializeArpeggioControl() {
+      const arpCheckbox = document.querySelector(
+        "._arpState"
+      ) as HTMLInputElement;
+
+      if (arpCheckbox) {
+        arpCheckbox.addEventListener("change", (e) => {
+          this.isArpeggioEnabled = (e.target as HTMLInputElement).checked;
+          if (!this.isArpeggioEnabled) {
+            this.activeArpeggios.clear();
+          }
+        });
+      }
     }
   }
 
