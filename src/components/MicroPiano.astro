@@ -108,6 +108,11 @@
       snare: HTMLElement | null;
       clap: HTMLElement | null;
     };
+    private readonly octaveControls: {
+      up: HTMLElement | null;
+      down: HTMLElement | null;
+    };
+    private readonly arpCheckbox: HTMLInputElement | null;
 
     // State
     private currentOctave: number;
@@ -152,6 +157,11 @@
         snare: document.querySelector(".MicroPiano_pad._snare"),
         clap: document.querySelector(".MicroPiano_pad._clap"),
       };
+      this.octaveControls = {
+        up: document.querySelector(".MicroPiano_octaveEdit._up"),
+        down: document.querySelector(".MicroPiano_octaveEdit._down"),
+      };
+      this.arpCheckbox = document.querySelector("._arpState");
 
       // Initialize base frequencies
       this.baseNotes = this.initializeBaseNotes();
@@ -411,9 +421,6 @@
     }
 
     private initializeOctaveControls() {
-      const octaveUp = document.querySelector(".MicroPiano_octaveEdit._up");
-      const octaveDown = document.querySelector(".MicroPiano_octaveEdit._down");
-
       const handleOctaveUp = () => {
         if (this.currentOctave < Piano.MAX_OCTAVE) {
           this.currentOctave++;
@@ -429,8 +436,8 @@
       };
 
       // Mouse click handlers
-      octaveUp?.addEventListener("click", handleOctaveUp);
-      octaveDown?.addEventListener("click", handleOctaveDown);
+      this.octaveControls.up?.addEventListener("click", handleOctaveUp);
+      this.octaveControls.down?.addEventListener("click", handleOctaveDown);
 
       // Keyboard handlers
       document.addEventListener("keydown", (e) => {
@@ -483,45 +490,34 @@
     }
 
     private initializeArpeggioControl() {
-      const arpCheckbox = document.querySelector(
-        "._arpState"
-      ) as HTMLInputElement;
-
-      if (arpCheckbox) {
-        arpCheckbox.addEventListener("change", (e) => {
-          this.isArpeggioEnabled = (e.target as HTMLInputElement).checked;
-          if (!this.isArpeggioEnabled) {
-            this.activeArpeggios.clear();
-          }
-        });
-      }
+      this.arpCheckbox?.addEventListener("change", (e) => {
+        this.isArpeggioEnabled = (e.target as HTMLInputElement).checked;
+        if (!this.isArpeggioEnabled) {
+          this.activeArpeggios.clear();
+        }
+      });
     }
 
     private initializeDrumPads() {
-      const kickPad = document.querySelector(".MicroPiano_pad._kick");
-      const snarePad = document.querySelector(".MicroPiano_pad._snare");
-      const clapPad = document.querySelector(".MicroPiano_pad._clap");
+      this.drumPads.kick?.addEventListener("click", () => this.playKick());
+      this.drumPads.snare?.addEventListener("click", () => this.playSnare());
+      this.drumPads.clap?.addEventListener("click", () => this.playClap());
 
-      kickPad?.addEventListener("click", () => this.playKick());
-      snarePad?.addEventListener("click", () => this.playSnare());
-      clapPad?.addEventListener("click", () => this.playClap());
-
-      // Add keyboard shortcuts for drums
       document.addEventListener("keydown", (e) => {
         if (e.repeat) return;
 
         switch (e.key.toLowerCase()) {
           case "8":
             this.playKick();
-            kickPad?.classList.add("active");
+            this.drumPads.kick?.classList.add("active");
             break;
           case "9":
             this.playSnare();
-            snarePad?.classList.add("active");
+            this.drumPads.snare?.classList.add("active");
             break;
           case "0":
             this.playClap();
-            clapPad?.classList.add("active");
+            this.drumPads.clap?.classList.add("active");
             break;
         }
       });
@@ -529,13 +525,13 @@
       document.addEventListener("keyup", (e) => {
         switch (e.key.toLowerCase()) {
           case "8":
-            kickPad?.classList.remove("active");
+            this.drumPads.kick?.classList.remove("active");
             break;
           case "9":
-            snarePad?.classList.remove("active");
+            this.drumPads.snare?.classList.remove("active");
             break;
           case "0":
-            clapPad?.classList.remove("active");
+            this.drumPads.clap?.classList.remove("active");
             break;
         }
       });
