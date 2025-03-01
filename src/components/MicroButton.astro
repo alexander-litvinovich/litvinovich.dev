@@ -2,19 +2,40 @@
 const {
   label,
   url = "",
+  className = "",
   newWindow = true,
   intent = "neutral",
   variant = "primary",
+  labelId = "",
+  icon = "",
 } = Astro.props;
 
-const Element = url.length ? "a" : "button";
+let Element = "button";
+
+if (url.length) {
+  Element = "a";
+}
+
+if (labelId.length) {
+  Element = "label";
+}
+
+const Icon = icon;
 ---
 
 <Element
   href={url}
-  class:list={["MicroButton", `_${intent}`, `_${variant}`]}
+  class:list={[
+    "MicroButton",
+    `_${intent}`,
+    `_${variant}`,
+    className,
+    icon && !label && "_square",
+  ]}
   target={newWindow ? "_blank" : "_self"}
+  for={labelId}
 >
+  {Icon ? <Icon /> : ""}
   {label}
 </Element>
 
@@ -40,7 +61,8 @@ const Element = url.length ? "a" : "button";
   .MicroButton {
     padding: 10px 14px;
     display: inline-flex;
-
+    justify-content: center;
+    align-items: center;
     font-family: "Roboto Mono", serif;
     font-size: 16px;
     font-weight: 500;
@@ -61,6 +83,14 @@ const Element = url.length ? "a" : "button";
     letter-spacing: -0.03em;
   }
 
+  .MicroButton._square {
+    font-size: 0;
+    aspect-ratio: 1;
+    line-height: 0;
+    height: 60px;
+    box-sizing: border-box;
+  }
+
   .MicroButton:active {
     transform: scale(0.95);
   }
@@ -76,6 +106,9 @@ const Element = url.length ? "a" : "button";
     border-color: var(--active-color);
   }
   ._tertiary {
+    color: var(--active-color);
+    background-color: transparent;
+    border-color: transparent;
   }
 
   @media (pointer: fine) {
