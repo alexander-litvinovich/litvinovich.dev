@@ -11,10 +11,12 @@ import MicroDonateAccs from "@/components/MicroDonateAccs.astro";
 import MicroDate from "@/components/MicroDate.astro";
 import Particles from "@/components/Particles.astro";
 
+import MicroButton from "@/components/MicroButton.astro";
+
 import socialSotvoril from "@/assets/social_sotvoril.png";
 import socialCic from "@/assets/social_cic.svg";
 import avatar from "@/assets/avatar.png";
-
+import IconArrowLeft from "@/assets/icon_arrow_left.svg";
 import imgCoin from "@/assets/img_coin.png";
 
 const head = {
@@ -88,8 +90,15 @@ const DONATE_ACCS = [
       body="Subscribe to the channels, like posts and videos:"
     />
   </div>
-  <BrickBreakerGame />
+  <MicroButton
+    intent="neutral"
+    variant="tertiary"
+    icon={IconArrowLeft}
+    label="Back Home"
+    url="/"
+  />
   <MicroDate />
+  <BrickBreakerGame />
 </DarkLayout>
 
 <script>

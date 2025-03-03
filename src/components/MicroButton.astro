@@ -61,8 +61,8 @@ const Icon = icon;
   .MicroButton {
     padding: 10px 14px;
     display: inline-flex;
-    justify-content: center;
-    align-items: center;
+
+    gap: 8px;
     font-family: "Roboto Mono", serif;
     font-size: 16px;
     font-weight: 500;
@@ -74,6 +74,8 @@ const Icon = icon;
     transition: all 200ms ease;
 
     user-select: none;
+    justify-content: center;
+    align-items: center;
 
     border-width: 2px;
     border-style: solid;
@@ -84,11 +86,11 @@ const Icon = icon;
   }
 
   .MicroButton._square {
-    font-size: 0;
-    aspect-ratio: 1;
-    line-height: 0;
     height: 60px;
     box-sizing: border-box;
+    font-size: 0;
+    line-height: 0;
+    aspect-ratio: 1;
   }
 
   .MicroButton:active {
@@ -117,6 +119,9 @@ const Icon = icon;
     }
     ._secondary:hover {
       animation: blink-secondary 400ms ease-in-out infinite;
+    }
+    ._tertiary:hover {
+      animation: blink-tertiary 400ms ease-in-out infinite;
     }
   }
 
@@ -147,6 +152,20 @@ const Icon = icon;
     }
     100% {
       box-shadow: none;
+      text-shadow: none;
+    }
+  }
+
+  @keyframes blink-tertiary {
+    0% {
+      text-shadow: none;
+    }
+    50% {
+      text-shadow: 0 0 8px var(--active-color);
+
+      color: var(--hover-active-color);
+    }
+    100% {
       text-shadow: none;
     }
   }

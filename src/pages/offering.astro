@@ -1,14 +1,16 @@
 ---
-import { Image } from "astro:assets";
-
-import computer from "@/assets/computer.mp4";
-
 import DarkLayout from "@/layouts/DarkLayout.astro";
 import MicroButton from "@/components/MicroButton.astro";
 import MicroDate from "@/components/MicroDate.astro";
+
+import computer from "@/assets/computer.mp4";
 ---
 
-<DarkLayout showGrid={true}>
+<DarkLayout
+  showGrid={true}
+  showHomeLink={true}
+  homePageHint="Design and development services offering"
+>
   <div class="Offering">
     <video autoplay loop class="Offering_video">
       <source src={computer} type="video/mp4" />
@@ -32,31 +34,33 @@ import MicroDate from "@/components/MicroDate.astro";
           newWindow={true}
         />
       </p>
-
+    </div>
+    <div class="Offering_paper">
       <h2>Coding is not your thing?</h2>
       <p>
         Looking for a unique and personalized web presence? I specialize in
         creating custom-tailored web solutions that perfectly fit your needs.
         Whether it's a personal blog, a portfolio, or a business website, I can
         help bring your vision to life with a modern, responsive, and efficient
-        design.
+        design and code.
       </p>
       <p>
         Let's collaborate to build a website that stands out and delivers an
         exceptional user experience. Contact me to discuss your project and get
         started on creating something amazing together.
       </p>
-
-      <p>Drop me a line: Alexander (Sasha) Litvinovich Product Designer</p>
+      <p>
+        <MicroButton
+          url="https://www.linkedin.com/in/alexander-litvinovich/"
+          variant="primary"
+          intent="success"
+          label="Write on LinkedIn"
+          newWindow={true}
+        />
+      </p>
     </div>
-    <MicroButton
-      url="/"
-      variant="secondary"
-      intent="success"
-      label="Back Home"
-    />
+    <MicroDate />
   </div>
-  <MicroDate />
 </DarkLayout>
 
 <style>
@@ -71,6 +75,12 @@ import MicroDate from "@/components/MicroDate.astro";
   .Offering_video {
     width: 100%;
     height: auto;
+    border-radius: 16px;
+  }
+
+  .Offering_paper {
+    padding: 8px 24px;
+    background-color: var(--color-paper);
     border-radius: 16px;
   }
 </style>
