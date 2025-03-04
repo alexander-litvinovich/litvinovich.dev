@@ -1,5 +1,5 @@
 ---
-import IconArrow from "../assets/icon-arrow.svg";
+import IconNewTab from "@/assets/icon_newtab.svg";
 
 interface DonateAccount {
   name: string;
@@ -30,7 +30,7 @@ const { donateAccounts } = Astro.props as { donateAccounts: DonateAccount[] };
             <span class="MicroDonateAccs_name">{acc.name}:</span>
             <span class="MicroDonateAccs_id">
               {acc.id}
-              {acc.idHref && <IconArrow />}
+              {acc.idHref && <IconNewTab />}
             </span>
           </Element>
           {index < donateAccounts.length - 1 && (

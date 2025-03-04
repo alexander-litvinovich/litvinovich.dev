@@ -54,3 +54,4 @@ personality: Technical, solution-oriented, focused on best practices
 - Place pages in /src/pages
 - Place styles in /src/styles
 - Place content collections in /src/content
+- Astro layout is located at /src/layouts/BaseLayout.astro

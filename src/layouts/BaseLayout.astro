@@ -5,14 +5,39 @@ import favicon from "@/assets/favicon.ico";
 import favicon96 from "@/assets/favicon-96.png";
 import favicon192 from "@/assets/favicon-192.png";
 
-import { pwaInfo } from "virtual:pwa-info";
-
 const {
   head = {
     title: "Alexander Litvinovich",
-    description: "",
+    description: "Personal website of Alexander Litvinovich",
+    image: undefined, // Let the layout handle the image URL
   },
 } = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, "https://litvinovich.dev");
+
+// Generate image URL based on the current page path
+function generateImageUrl() {
+  // If a custom image is provided, use it
+  if (head.image) {
+    return new URL(head.image, "https://litvinovich.dev");
+  }
+
+  // Get the pathname and clean it up
+  let pathname = Astro.url.pathname;
+  if (pathname === "/") {
+    pathname = "index";
+  } else if (pathname === "/404") {
+    pathname = "404";
+  } else {
+    // Remove leading slash and trailing slash if present
+    pathname = pathname.replace(/^\/|\/$/g, "");
+  }
+
+  // Generate the image URL
+  return new URL(`/og-images/${pathname}.png`, "https://litvinovich.dev");
+}
+
+const imageUrl = generateImageUrl();
 ---
 
 <!doctype html>
@@ -36,8 +61,21 @@ const {
     <meta name="generator" content={Astro.generator} />
     <title>{head.title}</title>
 
-    {pwaInfo && <Fragment set:html={pwaInfo.webManifest.linkTag} />}
-    <script src="../pwa.ts"></script>
+    <!-- OpenGraph Meta Tags -->
+    <meta property="og:title" content={head.title} />
+    <meta property="og:description" content={head.description} />
+    <meta property="og:image" content={imageUrl} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:type" content="website" />
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={head.title} />
+    <meta name="twitter:description" content={head.description} />
+    <meta name="twitter:image" content={imageUrl} />
+
+    <!-- PWA -->
+    <slot name="pwa" />
   </head>
   <body>
     <slot />

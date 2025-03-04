@@ -1,4 +1,22 @@
 ---
+/**
+ * MicroButton Component
+ *
+ * A versatile button component that can be rendered as a button, link, or label element.
+ * Supports different intents (neutral, active, success), variants (primary, secondary, tertiary),
+ * and can include an optional icon.
+ *
+ * Props:
+ * - label: string - The text content of the button
+ * - url: string (optional) - If provided, renders as an anchor tag with the specified URL
+ * - className: string (optional) - Additional CSS classes to apply
+ * - newWindow: boolean (default: true) - Whether to open links in a new window
+ * - intent: "neutral" | "active" | "success" (default: "neutral") - The button's color scheme
+ * - variant: "primary" | "secondary" | "tertiary" (default: "primary") - The button's style variant
+ * - labelId: string (optional) - If provided, renders as a label element for the specified input
+ * - icon: Component (optional) - An Astro component to render as an icon
+ */
+
 const {
   label,
   url = "",
@@ -7,7 +25,7 @@ const {
   intent = "neutral",
   variant = "primary",
   labelId = "",
-  icon = "",
+  icon,
 } = Astro.props;
 
 let Element = "button";
@@ -20,11 +38,10 @@ if (labelId.length) {
   Element = "label";
 }
 
-const Icon = icon;
+const Icon = icon ? icon : undefined;
 ---
 
 <Element
-  href={url}
   class:list={[
     "MicroButton",
     `_${intent}`,
@@ -32,10 +49,10 @@ const Icon = icon;
     className,
     icon && !label && "_square",
   ]}
-  target={newWindow ? "_blank" : "_self"}
-  for={labelId}
+  {...url.length ? { href: url, target: newWindow ? "_blank" : "_self" } : {}}
+  {...labelId.length ? { for: labelId } : {}}
 >
-  {Icon ? <Icon /> : ""}
+  {Icon && <Icon />}
   {label}
 </Element>
 

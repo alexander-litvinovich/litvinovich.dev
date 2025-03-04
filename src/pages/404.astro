@@ -1,381 +1,166 @@
 ---
-// import { Image } from "astro:assets";
-
 import DarkLayout from "@/layouts/DarkLayout.astro";
-const head = {
-  title: "The page is not found",
-};
+import MicroPiano from "@/components/MicroPiano.astro";
+import MicroGlyph from "@/components/MicroGlyph.astro";
+import MicroButton from "@/components/MicroButton.astro";
+
+import IconCross from "@/assets/icon_cross.svg";
 ---
 
-<DarkLayout head={head}>
-  <div class="P404_message">
-    <div>
-      <h2 class="P404_header">The page is not found</h2>
-      <p class="P404_text">If you think it should be, please drop us a line</p>
+<DarkLayout
+  className="Piano_overflowHidden"
+  head={{ title: "Page Not Found" }}
+  showGrid={true}
+  showHomeLink={true}
+  homePageHint="There's basically nothing to see here..."
+>
+  <div class="Piano">
+    <input type="checkbox" id="Piano_focus" />
+    <div class="Piano_container">
+      <div class="Piano_wrapper">
+        <MicroPiano startOctave={4} octaveCount={2} />
+      </div>
+      <div class="Piano_focus">
+        <MicroButton
+          labelId="Piano_focus"
+          intent="success"
+          variant="secondary"
+          label="Play"
+        />
+      </div>
+      <MicroButton
+        className="Piano_close"
+        labelId="Piano_focus"
+        intent="neutral"
+        variant="tertiary"
+        icon={IconCross}
+      />
     </div>
-    <div></div>
-    <a href="/" class="P404_button">Go to Homepage</a>
-  </div>
-  <div class="plasma-container">
-    <div class="P404_mask">
-      <div class="P404_highlight"></div>
-      404
+
+    <div class="Piano_footer">
+      <div class="Piano_hint">
+        Who can forbid me to do some weird stuff with code?!
+      </div>
+      <MicroGlyph />
     </div>
-    <canvas id="plasma-canvas"></canvas>
   </div>
 </DarkLayout>
 
 <style>
-  .P404_message {
-    width: 100%;
+  .Piano {
     height: 100%;
     display: grid;
-    user-select: none;
-    grid-template-rows: auto min(60dvh, 60dvw) auto;
-
-    align-items: end;
-    justify-items: center;
-  }
-
-  .P404_mask {
-    position: fixed;
-    z-index: 1;
-    width: 100%;
-    height: 100%;
-    display: flex;
-
-    overflow: hidden;
-
-    font-family: monospace;
-    font-size: min(60dvh, 60dvw);
-
-    font-weight: 900;
-    line-height: min(60dvh, 60dvw);
-    text-align: center;
-    color: white;
-
-    background-color: #111;
-
-    animation: appear 1s ease-in forwards;
-
-    user-select: none;
+    gap: 16px;
+    grid-template-rows: 1fr auto;
     align-items: center;
     justify-content: center;
-
-    text-shadow: 0px 0px 20px #fff;
-
-    letter-spacing: -0.05em;
-
-    mix-blend-mode: multiply;
+    flex-grow: 1;
   }
 
-  .P404_highlight {
-    --lens-size: 30dvh;
-    --lens-own-offset: calc(var(--lens-size) / -2);
-    --off-lens-x: var(--offset-x, 50vh);
-    --off-lens-y: var(--offset-y, 50vh);
-
-    position: fixed;
-    top: 0;
-    left: 0;
-
-    z-index: 1;
-
-    margin-top: var(--lens-own-offset);
-    margin-left: var(--lens-own-offset);
-
-    width: var(--lens-size);
-    background: radial-gradient(
-      circle,
-      rgba(255, 255, 255, 0.3) 0%,
-      transparent 80%
-    );
-    aspect-ratio: 1;
-
-    transform: translate(var(--off-lens-x), var(--off-lens-y));
+  .Piano_wrapper {
+    width: 600px;
+    height: 240px;
   }
 
-  .P404_header {
-    margin: 0;
-    margin-bottom: 24px;
-    padding: 0 24px;
-    font-family: monospace;
-    font-size: 40px;
-    line-height: 48px;
+  #Piano_focus,
+  .Piano_focus {
+    display: none;
+  }
+
+  .Piano_container {
+    width: 100dvw;
+    display: flex;
+    justify-content: center;
+    align-items: start;
+  }
+
+  @media (max-width: 600px) {
+    .Piano {
+      position: relative;
+      height: 100%;
+      display: flex;
+      gap: 16px;
+      align-items: start;
+      flex-grow: 1;
+    }
+
+    .Piano_wrapper {
+      transition: transform 0.1s ease-in-out;
+      transform: scale(1.1) rotate(-90deg) translateX(-50%);
+      transform-origin: center center;
+
+      --rotate: -1;
+    }
+
+    .Piano_focus {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: linear-gradient(
+        to bottom,
+        transparent,
+        var(--color-underpaper)
+      );
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .Piano_footer {
+      display: none;
+    }
+
+    #Piano_focus:checked + .Piano_container .Piano_focus {
+      display: none;
+    }
+    #Piano_focus:checked + .Piano_container .Piano_wrapper {
+      transform: scale(1.1) rotate(-90deg);
+    }
+
+    #Piano_focus:checked + .Piano_container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 10;
+      width: 100dvw;
+      height: 100dvh;
+      display: flex;
+      background-color: var(--color-underpaper);
+      justify-content: center;
+      align-items: center;
+    }
+  }
+
+  .Piano_hint {
+    font-family: "Georgia";
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 24px;
     text-align: center;
 
-    color: var(--color-ink-50);
-    letter-spacing: -0.03em;
-  }
-
-  .P404_text {
-    text-align: center;
-    letter-spacing: -0.03em;
-
-    color: var(--color-ink-30);
-  }
-
-  .P404_button {
-    padding: 24px 48px;
-    width: auto;
-    display: inline;
-    color: var(--color-ink);
-    background-color: var(--color-black-50);
-    border: 2px solid var(--color-ink-50);
-    border-radius: 16px;
-
-    text-decoration: none;
-    align-self: flex-start;
-  }
-
-  @media (pointer: fine) {
-    .P404_button {
-      color: var(--color-ink-50);
-      background-color: transparent;
-      transition: all 0.2s ease;
-      cursor: pointer;
-      border-color: var(--color-ink-20);
-    }
-    .P404_button:hover {
-      color: var(--color-ink);
-      background-color: var(--color-black-50);
-      border-color: var(--color-ink-50);
-    }
-  }
-
-  @keyframes appear {
-    0% {
-      color: #000;
-      text-shadow: 0px 0px 20px #000;
-    }
-
-    80% {
-      color: #fff;
-      text-shadow: 0px 0px 0px #000;
-    }
-
-    100% {
-      color: #fff;
-      text-shadow: 0px 0px 20px #fff;
-    }
-  }
-
-  .plasma-container {
-    position: fixed;
-    z-index: 0;
-    width: 100%;
-    height: 100%;
-    background-color: #000;
-    inset: 0;
-  }
-
-  #plasma-canvas {
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-  }
-
-  .P404_message {
-    position: relative;
-    z-index: 2;
-    color: #fff;
+    color: var(--color-white-50);
+    font-style: normal;
   }
 </style>
 
-<script>
-  // Constants
-  const ASCII_CHARS = "   . = +*# @      ";
-  const CHAR_SIZE = 18;
-  const PLASMA_SPEED = 0.03;
-  const COLOR_SHIFT_SPEED = 0.1;
-
-  class PlasmaEffect {
-    canvas: HTMLCanvasElement | null;
-    ctx: CanvasRenderingContext2D | null = null;
-    time: number = 0;
-    animationId: number | null = null;
-    resizeObserver: ResizeObserver | null = null;
-
-    constructor(canvasId: string) {
-      this.canvas = document.getElementById(canvasId) as HTMLCanvasElement;
-
-      if (this.canvas) {
-        this.ctx = this.canvas.getContext("2d", { alpha: false });
-        this.time = 0;
-        this.animationId = null;
-        this.resizeObserver = null;
-
-        // Bind methods
-        this.render = this.render.bind(this);
-        this.handleResize = this.handleResize.bind(this);
-        this.calculatePlasma = this.calculatePlasma.bind(this);
-
-        // Initialize
-        this.init();
-      }
-    }
-
-    init() {
-      // Set up resize observer for better performance than resize event
-      this.resizeObserver = new ResizeObserver(this.handleResize);
-      this.resizeObserver.observe(document.body);
-
-      // Initial sizing
-      this.handleResize();
-
-      // Start animation
-      this.render();
-    }
-
-    handleResize() {
-      if (!this.canvas || !this.ctx) return;
-
-      const dpr = window.devicePixelRatio || 1;
-      const displayWidth = window.innerWidth;
-      const displayHeight = window.innerHeight;
-
-      // Set canvas size accounting for device pixel ratio
-      this.canvas.width = displayWidth * dpr;
-      this.canvas.height = displayHeight * dpr;
-
-      // Scale context to ensure correct drawing operations
-      this.ctx.scale(dpr, dpr);
-
-      // Set CSS size
-      this.canvas.style.width = `${displayWidth}px`;
-      this.canvas.style.height = `${displayHeight}px`;
-
-      // Update text rendering properties
-      this.ctx.font = `${CHAR_SIZE}px monospace`;
-      this.ctx.textAlign = "center";
-      this.ctx.textBaseline = "middle";
-    }
-
-    calculatePlasma(x: number, y: number, t: number) {
-      if (!this.canvas) return;
-
-      // Cache frequently used values
-      const cosT = Math.cos(t);
-      const sinT = Math.sin(t);
-
-      // Center-based wave
-      const centerX = this.canvas.width / 2;
-      const centerY = this.canvas.height / 2;
-      const offsetX = x - centerX + sinT * 120;
-      const offsetY = y - centerY + cosT * 80;
-      const dist = Math.sqrt(offsetX * offsetX + offsetY * offsetY);
-
-      const value4 = Math.sin(dist * 0.03 + t);
-      const value5 = Math.sin(Math.sqrt(x * x + y * y) * 0.007 + t);
-
-      return (value4 + value5 + 5) / 10;
-    }
-
-    hslToRgb(h: number, s: number, l: number) {
-      let r, g, b;
-
-      if (s === 0) {
-        r = g = b = l;
-      } else {
-        const hue2rgb = (p: number, q: number, t: number) => {
-          if (t < 0) t += 1;
-          if (t > 1) t -= 1;
-          if (t < 1 / 6) return p + (q - p) * 6 * t;
-          if (t < 1 / 2) return q;
-          if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
-          return p;
-        };
-
-        const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-        const p = 2 * l - q;
-
-        r = hue2rgb(p, q, h + 1 / 3);
-        g = hue2rgb(p, q, h);
-        b = hue2rgb(p, q, h - 1 / 3);
-      }
-
-      return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
-    }
-
-    render() {
-      if (!this.canvas || !this.ctx) return;
-      // Clear with black background
-      this.ctx.fillStyle = "black";
-      this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-
-      const cols = Math.floor(this.canvas.width / CHAR_SIZE);
-      const rows = Math.floor(this.canvas.height / CHAR_SIZE);
-
-      // Batch processing for better performance
-      for (let y = 0; y < rows; y++) {
-        for (let x = 0; x < cols; x++) {
-          const posX = x * CHAR_SIZE + CHAR_SIZE / 2;
-          const posY = y * CHAR_SIZE + CHAR_SIZE / 2;
-
-          const value = this.calculatePlasma(posX, posY, this.time) || 0;
-          const charIndex = Math.floor(
-            (value - 0.2) * 1.3 * ASCII_CHARS.length
-          );
-
-          // Calculate rainbow color
-          const hue = (value + this.time * COLOR_SHIFT_SPEED) % 1;
-          const [r, g, b] = this.hslToRgb(hue, 0.8, 0.5);
-          this.ctx.fillStyle = `rgb(${r},${g},${b})`;
-
-          // Draw character
-          this.ctx.fillText(ASCII_CHARS[charIndex], posX, posY);
-        }
-      }
-
-      this.time += PLASMA_SPEED;
-      this.animationId = requestAnimationFrame(this.render);
-    }
-
-    destroy() {
-      if (this.animationId) {
-        cancelAnimationFrame(this.animationId);
-      }
-      if (this.resizeObserver) {
-        this.resizeObserver.disconnect();
-      }
-    }
+<style is:global>
+  .Piano_close.Piano_close {
+    display: none;
   }
 
-  // Initialize when the DOM is ready
-  let plasmaEffect: PlasmaEffect | null = null;
-
-  function init() {
-    if (plasmaEffect) {
-      plasmaEffect.destroy();
+  @media (max-width: 600px) {
+    #Piano_focus:checked + .Piano_container .Piano_close {
+      position: fixed;
+      top: 8px;
+      right: 8px;
+      display: flex;
     }
-    plasmaEffect = new PlasmaEffect("plasma-canvas");
-  }
 
-  // Handle both Astro page loads and regular DOM content loaded
-  document.addEventListener("astro:page-load", init);
-  document.addEventListener("DOMContentLoaded", init);
-
-  // Cleanup on page unload
-  document.addEventListener("astro:before-swap", () => {
-    if (plasmaEffect) {
-      plasmaEffect.destroy();
+    .Piano_overflowHidden {
+      height: 100dvh;
+      overflow: hidden;
     }
-  });
-
-  const wrapper = document.querySelector(
-    ".plasma-container"
-  ) as HTMLElement | null;
-
-  const mouseMoveHandler = (e: MouseEvent) => {
-    if (!wrapper) return;
-
-    requestAnimationFrame(() => {
-      wrapper.style.cssText = `--offset-x: ${e.clientX}px; --offset-y: ${e.clientY}px;`;
-    });
-  };
-
-  const body = document.querySelector("body");
-  if (body) {
-    body.addEventListener("mousemove", mouseMoveHandler);
   }
-</script>
+</style>
