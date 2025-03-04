@@ -49,15 +49,29 @@ const imageUrl = generateImageUrl();
       content="width=device-width, initial-scale=1.0, user-scalable=no"
     />
 
+    <!-- PWA Meta Tags -->
+    <meta name="application-name" content="Litvinovich.dev" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+    <meta name="apple-mobile-web-app-title" content="Litvinovich.dev" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="theme-color" content="#111111" />
+    <meta name="msapplication-TileColor" content="#111111" />
+
+    <!-- PWA Icons -->
     <link rel="icon" type="image/png" href={favicon96.src} sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href={faviconSvg.src} />
     <link rel="shortcut icon" href={favicon} />
     <link rel="apple-touch-icon" sizes="192x192" href={favicon192.src} />
-    <meta name="apple-mobile-web-app-title" content={head.title} />
-    <meta name="mobile-web-app-capable" content="yes" />
+    <link rel="apple-touch-startup-image" href={favicon192.src} />
 
-    <meta name="msapplication-TileColor" content="#111111" />
-    <meta name="theme-color" content="#111111" />
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.webmanifest" />
+
     <meta name="generator" content={Astro.generator} />
     <title>{head.title}</title>
 

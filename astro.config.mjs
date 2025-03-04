@@ -86,6 +86,9 @@ export default defineConfig({
                   },
                 },
               ],
+              skipWaiting: true,
+              clientsClaim: true,
+              cleanupOutdatedCaches: true,
             }
           : // Production mode config
             {
@@ -95,9 +98,7 @@ export default defineConfig({
               runtimeCaching: [
                 {
                   urlPattern: /^https:\/\/[^/]+\/.*/,
-                  // handler: "CacheFirst",
                   handler: "NetworkFirst",
-
                   options: {
                     cacheName: "site-cache",
                     networkTimeoutSeconds: 5,
@@ -112,8 +113,11 @@ export default defineConfig({
                 },
               ],
               cleanupOutdatedCaches: true,
+              skipWaiting: true,
+              clientsClaim: true,
             }),
       },
+      manifestFilename: "manifest.webmanifest",
     }),
   ],
 });

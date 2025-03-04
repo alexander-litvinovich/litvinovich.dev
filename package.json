@@ -11,9 +11,7 @@
     "lint:css:fix": "stylelint \"src/**/*.{css,astro}\" --fix"
   },
   "dependencies": {
-    "astro": "^5.2.3",
-    "astrojs-service-worker": "^2.0.0",
-    "workbox-window": "^7.3.0"
+    "astro": "^5.2.3"
   },
   "devDependencies": {
     "@types/fs-extra": "^11.0.4",
