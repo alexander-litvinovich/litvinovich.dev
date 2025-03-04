@@ -1,184 +1,114 @@
 import type { AstroIntegration } from "astro";
-import fs from "fs-extra";
-import path from "path";
+import fs from "fs";
 import sharp from "sharp";
-import { fileURLToPath } from "url";
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+import { join, resolve } from "path";
 
 interface OGImagesOptions {
-  template?: string;
-  outputDir?: string;
-  defaultTitle?: string;
+  template: string;
 }
 
-export default function ogImages(
-  options: OGImagesOptions = {}
-): AstroIntegration {
-  const {
-    template = path.join(__dirname, "../../assets/og-template.svg"),
-    outputDir = "public/og-images",
-    defaultTitle = "Alexander Litvinovich",
-  } = options;
+function extractTitleFromHtml(html: string): string {
+  // Try to find title in <title> tag
+  const titleMatch = html.match(/<title[^>]*>([^<]+)<\/title>/i);
+  if (titleMatch) {
+    return titleMatch[1].trim();
+  }
+
+  // Try to find title in meta tags
+  const metaTitleMatch = html.match(
+    /<meta[^>]*property="og:title"[^>]*content="([^"]+)"/i
+  );
+  if (metaTitleMatch) {
+    return metaTitleMatch[1].trim();
+  }
+
+  // Try to find h1 tag
+  const h1Match = html.match(/<h1[^>]*>([^<]+)<\/h1>/i);
+  if (h1Match) {
+    return h1Match[1].trim();
+  }
+
+  return "Not Found";
+}
+
+export default function ogImages(options: OGImagesOptions): AstroIntegration {
+  console.log("\n=== OG Images Integration Initialization ===");
+  console.log("Integration options:", options);
 
   return {
-    name: "astro-og-images",
+    name: "og-images",
     hooks: {
-      "build:start": async () => {
-        const pagesDir = path.join(process.cwd(), "src/pages");
-        const layoutsDir = path.join(process.cwd(), "src/layouts");
-        const publicPath = path.join(process.cwd(), outputDir);
+      "astro:build:done": async (props: any) => {
+        const { dir, routes } = props;
 
-        // Ensure the public directory exists
-        await fs.ensureDir(publicPath);
-
-        // Read the template SVG
-        const templateContent = await fs.readFile(template, "utf-8");
-
-        // Function to find title in layout files
-        async function findTitleInLayouts(pageContent: string) {
-          // Look for layout imports
-          const layoutImports = pageContent.match(
-            /import\s+(\w+Layout)\s+from\s+["']@\/layouts\/(\w+Layout)["']/g
-          );
-          if (!layoutImports) return null;
-
-          for (const importLine of layoutImports) {
-            const layoutName = importLine.match(
-              /from\s+["']@\/layouts\/(\w+Layout)["']/
-            )![1];
-            const layoutPath = path.join(layoutsDir, `${layoutName}.astro`);
-
-            try {
-              const layoutContent = await fs.readFile(layoutPath, "utf-8");
-              const titleMatch = layoutContent.match(
-                /head\s*=\s*{\s*title:\s*["'](.+?)["']/
-              );
-              if (titleMatch) {
-                return titleMatch[1];
-              }
-            } catch (error) {
-              console.warn(`Could not read layout file: ${layoutPath}`);
-            }
-          }
-
-          return null;
-        }
-
-        // Function to extract title from Astro file content
-        async function extractTitle(content: string, filePath: string) {
-          // Look for title in frontmatter
-          const frontmatterMatch = content.match(/title:\s*["'](.+?)["']/);
-          if (frontmatterMatch) {
-            return frontmatterMatch[1];
-          }
-
-          // Look for title in head prop
-          const headMatch = content.match(
-            /head\s*=\s*{\s*title:\s*["'](.+?)["']/
-          );
-          if (headMatch) {
-            return headMatch[1];
-          }
-
-          // Look for title in head object
-          const headObjectMatch = content.match(/head\s*=\s*{\s*([^}]+)}/);
-          if (headObjectMatch) {
-            const headContent = headObjectMatch[1];
-            const titleMatch = headContent.match(/title:\s*["'](.+?)["']/);
-            if (titleMatch) {
-              return titleMatch[1];
-            }
-          }
-
-          // Look for HTML title tag
-          const htmlTitleMatch = content.match(/<title>(.+?)<\/title>/);
-          if (htmlTitleMatch) {
-            return htmlTitleMatch[1];
-          }
-
-          // Look for title in layout files
-          const layoutTitle = await findTitleInLayouts(content);
-          if (layoutTitle) {
-            return layoutTitle;
-          }
-
-          // Look for h1 tag
-          const h1Match = content.match(/<h1[^>]*>(.+?)<\/h1>/);
-          if (h1Match) {
-            return h1Match[1];
-          }
-
-          // Default titles for known pages
-          const defaultTitles: Record<string, string> = {
-            "index.astro": defaultTitle,
-            "game.astro": "Touch Arkanoid",
-          };
-
-          const fileName = path.basename(filePath);
-          if (defaultTitles[fileName]) {
-            return defaultTitles[fileName];
-          }
-
-          return null;
-        }
-
-        // Function to generate OG image for a page
-        async function generateOGImage(title: string, outputPath: string) {
-          // Replace the title placeholder in the SVG
-          const svgContent = templateContent.replace(
-            "TITLE_PLACEHOLDER",
-            title
-          );
-
-          // Convert SVG to PNG using sharp
-          await sharp(Buffer.from(svgContent)).png().toFile(outputPath);
-
-          console.log(`Generated OG image: ${outputPath}`);
-        }
-
-        // Function to process a single page
-        async function processPage(filePath: string) {
-          const content = await fs.readFile(filePath, "utf-8");
-          const title = await extractTitle(content, filePath);
-
-          if (!title) {
-            console.warn(`No title found for ${filePath}`);
-            return;
-          }
-
-          // Generate output filename from the page path
-          const relativePath = path.relative(pagesDir, filePath);
-          const outputName = relativePath
-            .replace(/\.astro$/, "")
-            .replace(/index$/, "index")
-            .replace(/\//g, "-");
-          const outputPath = path.join(publicPath, `${outputName}.png`);
-
-          await generateOGImage(title, outputPath);
-        }
-
-        // Function to recursively scan directory for Astro files
-        async function scanDirectory(dir: string) {
-          const entries = await fs.readdir(dir, { withFileTypes: true });
-
-          for (const entry of entries) {
-            const fullPath = path.join(dir, entry.name);
-
-            if (entry.isDirectory()) {
-              await scanDirectory(fullPath);
-            } else if (entry.name.endsWith(".astro")) {
-              await processPage(fullPath);
-            }
-          }
-        }
+        console.log("\n=== OG Images Integration: astro:build:done hook ===");
 
         try {
-          // Start scanning from the pages directory
-          await scanDirectory(pagesDir);
-          console.log("OpenGraph images generated successfully!");
+          const templatePath = resolve(process.cwd(), options.template);
+          const outputDir = join(dir.pathname, "og-images");
+          console.log("Output directory:", outputDir);
+
+          console.log("Current working directory:", process.cwd());
+          console.log("Template path:", templatePath);
+
+          // Check if template file exists
+          if (!fs.existsSync(templatePath)) {
+            throw new Error(`Template file not found at: ${templatePath}`);
+          }
+
+          // Ensure output directory exists
+          if (!fs.existsSync(outputDir)) {
+            fs.mkdirSync(outputDir, { recursive: true });
+            console.log("Created output directory:", outputDir);
+          }
+
+          // Read template
+          const template = fs.readFileSync(templatePath, "utf-8");
+          console.log("Template loaded successfully");
+
+          // Process routes
+          for (const route of routes) {
+            const pathname = route.pathname;
+            let htmlFile: string;
+
+            // Handle different page types
+            if (pathname === "/") {
+              htmlFile = "index.html";
+            } else if (pathname === "/404") {
+              htmlFile = "404.html";
+            } else {
+              htmlFile = `${pathname.replace(/^\//, "")}/index.html`;
+            }
+
+            console.log(`\nProcessing page: ${pathname}`);
+            const htmlPath = join(dir.pathname, htmlFile);
+            console.log("Reading HTML file:", htmlPath);
+
+            let title = "Not Found";
+            if (fs.existsSync(htmlPath)) {
+              const html = fs.readFileSync(htmlPath, "utf-8");
+              title = extractTitleFromHtml(html);
+              console.log("Extracted title:", title);
+            } else {
+              console.log("HTML file not found, using default title");
+            }
+
+            const outputPath = join(
+              outputDir,
+              `${pathname.replace(/^\//, "").replace(/\/$/, "") || "index"}.png`
+            );
+            console.log("Output path:", outputPath);
+
+            // Generate image
+            const svg = template.replace("TITLE_PLACEHOLDER", title);
+            await sharp(Buffer.from(svg)).png().toFile(outputPath);
+            console.log(`Generated image for ${pathname}`);
+          }
+
+          console.log("\n=== OG Images Generation Completed Successfully ===");
         } catch (error) {
-          console.error("Error generating OpenGraph images:", error);
+          console.error("\n=== Error in OG Images Generation ===");
+          console.error(error);
           throw error;
         }
       },

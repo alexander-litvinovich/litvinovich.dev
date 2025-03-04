@@ -2,6 +2,7 @@
 import { defineConfig } from "astro/config";
 import AstroPWA from "@vite-pwa/astro";
 import basicSsl from "@vitejs/plugin-basic-ssl";
+import ogImages from "./src/integrations/og-images";
 
 const isProd = process.env.NODE_ENV === "production";
 const assetDir = isProd ? "/_astro" : "/src/assets";
@@ -22,6 +23,9 @@ export default defineConfig({
     svg: true,
   },
   integrations: [
+    ogImages({
+      template: "./src/assets/og-template.svg",
+    }),
     AstroPWA({
       mode: isProd ? "production" : "development",
       base: "/",
