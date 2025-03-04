@@ -24,7 +24,7 @@ export default defineConfig({
   },
   integrations: [
     ogImages({
-      template: "./src/assets/og-template.svg",
+      template: "./src/assets/og-template-2.svg",
     }),
     AstroPWA({
       mode: isProd ? "production" : "development",
