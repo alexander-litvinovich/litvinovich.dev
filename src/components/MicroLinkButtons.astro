@@ -3,6 +3,7 @@ interface Button {
   label: string;
   desc: string;
   href: string;
+  newWindow?: boolean;
 }
 
 const { buttons } = Astro.props as { buttons: Button[] };
@@ -12,7 +13,11 @@ const { buttons } = Astro.props as { buttons: Button[] };
   {
     buttons.map((button, index) => (
       <>
-        <a class="MicroLinkButtons_button" href={button.href} target="_blank">
+        <a
+          class="MicroLinkButtons_button"
+          href={button.href}
+          target={button.newWindow ? "_blank" : "_self"}
+        >
           <span class="MicroLinkButtons_label">{button.label}</span>
           <span class="MicroLinkButtons_desc">{button.desc}</span>
         </a>
@@ -28,13 +33,10 @@ const { buttons } = Astro.props as { buttons: Button[] };
   .MicroLinkButtons {
     margin: 0 var(--side-paddings);
     padding: 16px;
-
     display: flex;
     flex-direction: column;
     gap: 16px;
-
-    background-color: #111;
-
+    background-color: var(--color-paper);
     border-radius: 16px;
   }
 
@@ -50,7 +52,6 @@ const { buttons } = Astro.props as { buttons: Button[] };
     font-size: 24px;
     font-weight: 700;
     line-height: 32px;
-
     color: var(--color-green);
     font-style: normal;
   }

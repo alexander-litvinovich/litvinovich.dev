@@ -126,10 +126,6 @@ export default function ogImages(options: OGImagesOptions): AstroIntegration {
   return {
     name: "og-images",
     hooks: {
-      "astro:dev:start": async (props: AstroBuildProps) => {
-        console.log("\n=== OG Images Integration: astro:dev:start hook ===");
-        await generateOGImages(props, options);
-      },
       "astro:build:done": async (props: AstroBuildProps) => {
         console.log("\n=== OG Images Integration: astro:build:done hook ===");
         await generateOGImages(props, options);

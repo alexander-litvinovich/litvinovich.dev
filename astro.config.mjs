@@ -71,7 +71,15 @@ export default defineConfig({
         ],
       },
       workbox: {
-        // Development mode config
+        // Common config for both modes
+        offlineGoogleAnalytics: false,
+        sourcemap: true,
+        skipWaiting: true,
+        clientsClaim: true,
+        cleanupOutdatedCaches: true,
+        // Cache static assets
+        globDirectory: "dist",
+        // Development mode specific config
         ...(!isProd
           ? {
               navigateFallback: null,
@@ -86,12 +94,11 @@ export default defineConfig({
                   },
                 },
               ],
-              skipWaiting: true,
-              clientsClaim: true,
-              cleanupOutdatedCaches: true,
             }
-          : // Production mode config
+          : // Production mode specific config
             {
+              navigateFallback: "index.html",
+              navigateFallbackDenylist: [/^\/api/, /^\/admin/],
               globPatterns: [
                 "**/*.{js,css,html,ico,png,svg,woff,woff2,ttf,eot,webp,jpg,jpeg}",
               ],
@@ -112,9 +119,6 @@ export default defineConfig({
                   },
                 },
               ],
-              cleanupOutdatedCaches: true,
-              skipWaiting: true,
-              clientsClaim: true,
             }),
       },
       manifestFilename: "manifest.webmanifest",

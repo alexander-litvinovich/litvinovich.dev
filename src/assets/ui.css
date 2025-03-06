@@ -15,6 +15,7 @@
   --color-ink-30: hsla(314, 80%, 92%, 0.3);
   --color-ink-20: hsla(314, 80%, 92%, 0.2);
   --color-black: #000;
+  --color-black-80: rgba(0, 0, 0, 0.8);
   --color-black-50: rgba(0, 0, 0, 0.5);
   --color-black-30: rgba(0, 0, 0, 0.3);
   --color-black-10: rgba(0, 0, 0, 0.1);

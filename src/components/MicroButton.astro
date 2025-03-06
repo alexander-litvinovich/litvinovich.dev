@@ -18,24 +18,25 @@
  */
 
 const {
+  id = "",
   label,
   url = "",
   className = "",
-  newWindow = true,
+  newWindow = false,
   intent = "neutral",
   variant = "primary",
   labelId = "",
   icon,
 } = Astro.props;
 
-let Element = "button";
+let Element = "button" as any;
 
 if (url.length) {
-  Element = "a";
+  Element = "a" as any;
 }
 
 if (labelId.length) {
-  Element = "label";
+  Element = "label" as any;
 }
 
 const Icon = icon ? icon : undefined;
@@ -49,6 +50,7 @@ const Icon = icon ? icon : undefined;
     className,
     icon && !label && "_square",
   ]}
+  id={id}
   {...url.length ? { href: url, target: newWindow ? "_blank" : "_self" } : {}}
   {...labelId.length ? { for: labelId } : {}}
 >

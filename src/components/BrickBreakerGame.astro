@@ -1,3 +1,7 @@
+---
+import MicroButton from "@/components/MicroButton.astro";
+---
+
 <div class="BrickBreakerGame_container hidden">
   <div class="BrickBreakerGame_stats">
     <div class="BrickBreakerGame_score">
@@ -8,7 +12,15 @@
     </div>
   </div>
   <canvas id="gameCanvas"></canvas>
-  <button class="BrickBreakerGame_startBtn" id="startButton">Start Game</button>
+  <div class="BrickBreakerGame_buttonContainer">
+    <MicroButton
+      id="startButton"
+      label="Start Game"
+      intent="active"
+      variant="primary"
+    />
+    <div class="BrickBreakerGame_hint">Press Space</div>
+  </div>
 </div>
 
 <script>
@@ -44,6 +56,30 @@
     width: number;
     height: number;
     colors: string[];
+    topPadding: number;
+    bottomPadding: number;
+  }
+
+  interface GameSettings {
+    // Ball settings
+    ballRadius: number;
+    ballSpeed: number;
+    // Paddle settings
+    paddleHeight: number;
+    paddleWidthPercent: number;
+    paddleSpeed: number;
+    // Brick settings
+    brickRows: number;
+    brickHeight: number;
+    brickPadding: number;
+    brickWidthPercent: number;
+    brickColors: string[];
+    // Game settings
+    lives: number;
+    scorePerBrick: number;
+    // Layout settings
+    topPadding: number;
+    bottomPadding: number;
   }
 
   class BrickBreakerGame {
@@ -52,12 +88,15 @@
     score: number;
     lives: number;
     gameStarted: boolean;
+    gameLoopRunning: boolean;
     paddle: Paddle;
     ball: Ball;
     bricks: Brick[];
     brickConfig: BrickConfig;
+    settings: GameSettings;
 
-    constructor() {
+    constructor(settings: GameSettings) {
+      this.settings = settings;
       // Wait for container to be visible before initializing
       const observer = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
@@ -66,6 +105,12 @@
             !mutation.target.classList.contains("hidden")
           ) {
             this.initGame();
+            this.resizeCanvas();
+            // Start the game loop immediately to show static elements
+            if (!this.gameLoopRunning) {
+              this.gameLoopRunning = true;
+              this.gameLoop();
+            }
             observer.disconnect();
           }
         });
@@ -75,6 +120,65 @@
       if (container) {
         observer.observe(container, { attributes: true });
       }
+
+      // Add window resize listener
+      window.addEventListener("resize", () => {
+        if (!this.gameStarted) {
+          this.resizeCanvas();
+          // Redraw static elements after resize
+          this.draw();
+        }
+      });
+    }
+
+    resizeCanvas() {
+      if (!this.canvas) return;
+
+      this.canvas.width = window.innerWidth;
+      this.canvas.height = window.innerHeight;
+
+      // Update paddle position
+      this.paddle = {
+        width: this.canvas.width * this.settings.paddleWidthPercent,
+        height: this.settings.paddleHeight,
+        x:
+          this.canvas.width / 2 -
+          (this.canvas.width * this.settings.paddleWidthPercent) / 2,
+        y: this.canvas.height - 30 - this.settings.bottomPadding,
+      };
+
+      // Update ball position
+      this.ball = {
+        radius: this.settings.ballRadius,
+        x: this.paddle.x + this.paddle.width / 2,
+        y: this.paddle.y - this.settings.ballRadius,
+        dx: this.ball?.dx ?? this.settings.ballSpeed,
+        dy: this.ball?.dy ?? -this.settings.ballSpeed,
+      };
+
+      // Calculate brick width as percentage of paddle width
+      const brickWidth = this.paddle.width * this.settings.brickWidthPercent;
+
+      // Calculate maximum number of bricks that can fit horizontally
+      const maxBricks = Math.floor(
+        (this.canvas.width - this.settings.brickPadding * 2) /
+          (brickWidth + this.settings.brickPadding)
+      );
+
+      // Update brick configuration
+      this.brickConfig = {
+        rows: this.settings.brickRows,
+        cols: maxBricks,
+        padding: this.settings.brickPadding,
+        width: brickWidth,
+        height: this.settings.brickHeight,
+        colors: this.settings.brickColors,
+        topPadding: this.settings.topPadding,
+        bottomPadding: this.settings.bottomPadding,
+      };
+
+      // Reinitialize bricks
+      this.initBricks();
     }
 
     initGame() {
@@ -82,59 +186,34 @@
       if (!this.canvas) return;
 
       this.ctx = this.canvas.getContext("2d") as CanvasRenderingContext2D;
-      this.lives = 3;
+      this.lives = this.settings.lives;
       this.score = 0;
       this.gameStarted = false;
+      this.gameLoopRunning = false;
 
-      // Set canvas size based on container
-      const container = document.querySelector(".BrickBreakerGame_container");
-      if (!container) return;
-
-      const containerWidth = container.clientWidth;
-      const containerHeight = container.clientHeight;
-
-      this.canvas.width = Math.min(800, containerWidth * 0.95);
-      this.canvas.height = Math.min(600, containerHeight * 0.8);
-
-      // Game objects
-      this.paddle = {
-        width: this.canvas.width * 0.15,
-        height: 20,
-        x: this.canvas.width / 2 - (this.canvas.width * 0.15) / 2,
-        y: this.canvas.height - 30,
-      };
-
-      this.ball = {
-        radius: 8,
-        x: this.canvas.width / 2,
-        y: this.canvas.height - 50,
-        dx: 5,
-        dy: -5,
-      };
-
-      // Create bricks
-      this.bricks = [];
-      this.brickConfig = {
-        rows: 5,
-        cols: 8,
-        padding: 10,
-        width: (this.canvas.width - 100) / 8,
-        height: 20,
-        colors: ["#FF0000", "#FF7F00", "#FFFF00", "#00FF00", "#0000FF"],
-      };
-
-      this.initBricks();
+      // Initial canvas setup
+      this.resizeCanvas();
       this.bindEvents();
       this.draw();
     }
 
     initBricks() {
       this.bricks = [];
+      const totalWidth =
+        this.brickConfig.cols *
+          (this.brickConfig.width + this.brickConfig.padding) -
+        this.brickConfig.padding;
+      const startX = (this.canvas.width - totalWidth) / 2;
+
       for (let row = 0; row < this.brickConfig.rows; row++) {
         for (let col = 0; col < this.brickConfig.cols; col++) {
           const brick = {
-            x: col * (this.brickConfig.width + this.brickConfig.padding) + 50,
-            y: row * (this.brickConfig.height + this.brickConfig.padding) + 50,
+            x:
+              startX +
+              col * (this.brickConfig.width + this.brickConfig.padding),
+            y:
+              row * (this.brickConfig.height + this.brickConfig.padding) +
+              this.brickConfig.topPadding,
             width: this.brickConfig.width,
             height: this.brickConfig.height,
             color: this.brickConfig.colors[row],
@@ -146,6 +225,48 @@
     }
 
     bindEvents() {
+      // Space key to start/continue game
+      document.addEventListener("keydown", (e) => {
+        if (e.code === "Space" && !this.gameStarted) {
+          this.startGame();
+        }
+      });
+
+      // Escape key to close game
+      document.addEventListener("keydown", (e) => {
+        if (e.code === "Escape") {
+          this.closeGame();
+        }
+      });
+
+      // Start button click
+      const startButton = document.getElementById("startButton");
+      if (startButton) {
+        startButton.addEventListener("click", () => {
+          this.startGame();
+        });
+      }
+
+      // Keyboard controls for paddle movement
+      document.addEventListener("keydown", (e) => {
+        if (!this.gameStarted) return;
+
+        switch (e.key) {
+          case "ArrowLeft":
+            this.paddle.x = Math.max(
+              0,
+              this.paddle.x - this.settings.paddleSpeed
+            );
+            break;
+          case "ArrowRight":
+            this.paddle.x = Math.min(
+              this.canvas.width - this.paddle.width,
+              this.paddle.x + this.settings.paddleSpeed
+            );
+            break;
+        }
+      });
+
       // Touch events for paddle movement
       this.canvas.addEventListener("touchmove", (e) => {
         e.preventDefault();
@@ -154,7 +275,11 @@
         const relativeX = touch.clientX - rect.left;
 
         if (relativeX > 0 && relativeX < this.canvas.width) {
-          this.paddle.x = relativeX - this.paddle.width / 2;
+          const newX = relativeX - this.paddle.width / 2;
+          this.paddle.x = Math.max(
+            0,
+            Math.min(this.canvas.width - this.paddle.width, newX)
+          );
         }
       });
 
@@ -164,18 +289,24 @@
         const relativeX = e.clientX - rect.left;
 
         if (relativeX > 0 && relativeX < this.canvas.width) {
-          this.paddle.x = relativeX - this.paddle.width / 2;
+          const newX = relativeX - this.paddle.width / 2;
+          this.paddle.x = Math.max(
+            0,
+            Math.min(this.canvas.width - this.paddle.width, newX)
+          );
         }
       });
+    }
 
-      // Start button
+    startGame() {
       const startButton = document.getElementById("startButton");
-      if (startButton) {
-        startButton.addEventListener("click", () => {
-          this.gameStarted = true;
-          startButton.style.display = "none";
-          this.gameLoop();
-        });
+      const buttonContainer = document.querySelector(
+        ".BrickBreakerGame_buttonContainer"
+      ) as HTMLElement;
+      if (startButton && buttonContainer) {
+        startButton.style.display = "none";
+        buttonContainer.style.display = "none";
+        this.gameStarted = true;
       }
     }
 
@@ -206,7 +337,7 @@
 
         // Add angle based on where the ball hits the paddle
         const hitPoint = (this.ball.x - this.paddle.x) / this.paddle.width;
-        this.ball.dx = 8 * (hitPoint - 0.5);
+        this.ball.dx = this.settings.ballSpeed * 1.6 * (hitPoint - 0.5);
       }
 
       // Brick collision
@@ -247,7 +378,7 @@
           }
 
           brick.visible = false;
-          this.score += 10;
+          this.score += this.settings.scorePerBrick;
           document.getElementById("scoreValue").textContent =
             this.score.toString();
 
@@ -275,21 +406,26 @@
           // Reset everything for the next game
           this.reset();
           // Reset paddle width and ball speed that might have been modified in previous levels
-          this.ball.dx = 5;
-          this.ball.dy = -5;
-          this.paddle.width = this.canvas.width * 0.15;
+          this.ball.dx = this.settings.ballSpeed;
+          this.ball.dy = -this.settings.ballSpeed;
+          this.paddle.width =
+            this.canvas.width * this.settings.paddleWidthPercent;
         } else {
           this.gameStarted = false;
           const startButton = document.getElementById("startButton");
-          if (startButton) {
+          const buttonContainer = document.querySelector(
+            ".BrickBreakerGame_buttonContainer"
+          ) as HTMLElement;
+          if (startButton && buttonContainer) {
             startButton.style.display = "block";
+            buttonContainer.style.display = "flex";
             startButton.textContent = "Continue";
           }
-          // Reset ball and paddle position without resetting score
-          this.ball.x = this.canvas.width / 2;
-          this.ball.y = this.canvas.height - 50;
-          this.ball.dx = 5;
-          this.ball.dy = -5;
+          // Reset ball position to follow paddle
+          this.ball.x = this.paddle.x + this.paddle.width / 2;
+          this.ball.y = this.paddle.y - this.settings.ballRadius;
+          this.ball.dx = this.settings.ballSpeed;
+          this.ball.dy = -this.settings.ballSpeed;
           this.paddle.x = this.canvas.width / 2 - this.paddle.width / 2;
         }
       }
@@ -299,19 +435,18 @@
       // Handle level completion
       this.gameStarted = false;
       const startButton = document.getElementById("startButton");
-      if (startButton) {
+      const buttonContainer = document.querySelector(
+        ".BrickBreakerGame_buttonContainer"
+      ) as HTMLElement;
+      if (startButton && buttonContainer) {
         startButton.style.display = "block";
+        buttonContainer.style.display = "flex";
         startButton.textContent = "Next Level";
       }
 
-      // Increase difficulty for next level
-      this.ball.dx *= 1.2;
-      this.ball.dy *= 1.2;
-      this.paddle.width *= 0.9;
-
-      // Reset ball and paddle position
-      this.ball.x = this.canvas.width / 2;
-      this.ball.y = this.canvas.height - 50;
+      // Reset ball position to follow paddle
+      this.ball.x = this.paddle.x + this.paddle.width / 2;
+      this.ball.y = this.paddle.y - this.settings.ballRadius;
       this.paddle.x = this.canvas.width / 2 - this.paddle.width / 2;
 
       // Create new bricks
@@ -320,7 +455,7 @@
 
     reset() {
       this.score = 0;
-      this.lives = 3;
+      this.lives = this.settings.lives;
       const scoreElement = document.getElementById("scoreValue");
       const livesElement = document.getElementById("livesValue");
 
@@ -331,10 +466,11 @@
         livesElement.textContent = this.lives.toString();
       }
 
-      this.ball.x = this.canvas.width / 2;
-      this.ball.y = this.canvas.height - 50;
-      this.ball.dx = 5;
-      this.ball.dy = -5;
+      // Reset ball position to follow paddle
+      this.ball.x = this.paddle.x + this.paddle.width / 2;
+      this.ball.y = this.paddle.y - this.settings.ballRadius;
+      this.ball.dx = this.settings.ballSpeed;
+      this.ball.dy = -this.settings.ballSpeed;
       this.paddle.x = this.canvas.width / 2 - this.paddle.width / 2;
       this.initBricks();
     }
@@ -351,6 +487,12 @@
         this.paddle.width,
         this.paddle.height
       );
+
+      // Update ball position to follow paddle if game hasn't started
+      if (!this.gameStarted) {
+        this.ball.x = this.paddle.x + this.paddle.width / 2;
+        this.ball.y = this.paddle.y - this.settings.ballRadius;
+      }
 
       // Draw ball
       this.ctx.beginPath();
@@ -369,17 +511,66 @@
     }
 
     gameLoop() {
+      // Always draw, but only update if game is started
+      this.draw();
       if (this.gameStarted) {
         this.update();
-        this.draw();
-        requestAnimationFrame(() => this.gameLoop());
       }
+      requestAnimationFrame(() => this.gameLoop());
+    }
+
+    closeGame() {
+      this.gameStarted = false;
+      const container = document.querySelector(".BrickBreakerGame_container");
+      const buttonContainer = document.querySelector(
+        ".BrickBreakerGame_buttonContainer"
+      ) as HTMLElement;
+      if (container && buttonContainer) {
+        container.classList.add("hidden");
+        buttonContainer.style.display = "flex";
+      }
+      // Reset game state
+      this.reset();
+      // Reset paddle width and ball speed
+      this.ball.dx = this.settings.ballSpeed;
+      this.ball.dy = -this.settings.ballSpeed;
+      this.paddle.width = this.canvas.width * this.settings.paddleWidthPercent;
+      // Reset button text
+      const startButton = document.getElementById("startButton");
+      if (startButton) {
+        startButton.style.display = "block";
+        startButton.textContent = "Start Game";
+      }
+      // Draw static elements one last time before hiding
+      this.draw();
     }
   }
 
   // Initialize game when component is mounted
   document.addEventListener("DOMContentLoaded", () => {
-    new BrickBreakerGame();
+    const defaultSettings: GameSettings = {
+      // Ball settings
+      ballRadius: 16,
+      ballSpeed: 5,
+      // Paddle settings
+      paddleHeight: 24,
+      paddleWidthPercent: 0.2,
+      paddleSpeed: 15,
+      // Brick settings
+      brickRows: 5,
+      brickHeight: 24,
+      brickPadding: 8,
+      brickWidthPercent: 0.7,
+      brickColors: ["#FF0000", "#FF7F00", "#FFFF00", "#00FF00", "#0000FF"],
+      // Game settings
+      lives: 3,
+      scorePerBrick: 10,
+      // Layout settings
+      topPadding: 64,
+      bottomPadding: 40,
+    };
+
+    new BrickBreakerGame(defaultSettings);
   });
 </script>
 
@@ -400,45 +591,32 @@
     width: 100%;
     height: 100%;
     display: block;
-    background: #000000aa;
+    background-color: var(--color-black-80);
   }
 
-  .BrickBreakerGame_startBtn {
+  .BrickBreakerGame_buttonContainer {
     position: absolute;
     top: 50%;
     left: 50%;
     z-index: 10;
-    padding: 1rem 2rem;
-    font-size: 1.5rem;
-    color: white;
-    background: linear-gradient(
-      90deg,
-      var(--color-violet) 0%,
-      var(--color-blue) 100%
-    );
-    border: none;
-    border-radius: 5px;
-    transition: all 0.3s;
-    cursor: pointer;
     transform: translate(-50%, -50%);
-  }
-
-  .BrickBreakerGame_startBtn:hover {
-    transform: translate(-50%, -50%) scale(1.05);
-    box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 
   .BrickBreakerGame_stats {
     position: absolute;
     top: 1rem;
+    left: 1rem;
     right: 1rem;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     gap: 0.5rem;
-    font-family: Arial, sans-serif;
     font-size: 1.5rem;
     color: white;
     text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    justify-content: space-between;
   }
 
   .BrickBreakerGame_score,
@@ -448,5 +626,20 @@
 
   .BrickBreakerGame_container.hidden {
     display: none;
+  }
+
+  .BrickBreakerGame_hint {
+    margin-top: 1rem;
+    text-align: center;
+    color: white;
+    font-family: "Roboto Mono", serif;
+    font-size: 1rem;
+    opacity: 0.7;
+  }
+
+  @media (pointer: coarse) {
+    .BrickBreakerGame_hint {
+      display: none;
+    }
   }
 </style>
