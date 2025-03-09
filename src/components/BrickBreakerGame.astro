@@ -15,7 +15,7 @@ import MicroButton from "@/components/MicroButton.astro";
   <div class="BrickBreakerGame_buttonContainer">
     <MicroButton
       id="startButton"
-      label="Start Game"
+      label="Play Game"
       intent="active"
       variant="primary"
     />
@@ -441,7 +441,7 @@ import MicroButton from "@/components/MicroButton.astro";
       if (startButton && buttonContainer) {
         startButton.style.display = "block";
         buttonContainer.style.display = "flex";
-        startButton.textContent = "Next Level";
+        startButton.textContent = "Play Again";
       }
 
       // Reset ball position to follow paddle
@@ -539,7 +539,7 @@ import MicroButton from "@/components/MicroButton.astro";
       const startButton = document.getElementById("startButton");
       if (startButton) {
         startButton.style.display = "block";
-        startButton.textContent = "Start Game";
+        startButton.textContent = "Play Game";
       }
       // Draw static elements one last time before hiding
       this.draw();
@@ -587,7 +587,6 @@ import MicroButton from "@/components/MicroButton.astro";
 
   #gameCanvas {
     margin: 0 auto;
-    /* touch-action: none; */
     width: 100%;
     height: 100%;
     display: block;
