@@ -74,4 +74,4 @@ The video for the "offering" page from "Muzzy in Gondoland" is owned by BBC corp
 
 ## 💰 Want your own custom micro landing page?
 
-If you are looking for a unique and personalized website, but web technologies are not your thing, contact me so we can discuss your project and begin building something incredible for you.
+If you are looking for a unique and personalized website, but web technologies are not your thing, [contact me](https://litvinovich.dev) so we can discuss your project and begin building something incredible for you.

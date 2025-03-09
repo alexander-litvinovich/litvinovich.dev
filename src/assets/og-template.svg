@@ -1,21 +1,61 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- Background -->
-  <rect width="1200" height="630" fill="#1a1a1a" />
-
-  <!-- Decorative elements -->
-  <circle cx="600" cy="315" r="400" stroke="#333333" stroke-width="2" fill="none" />
-  <circle cx="600" cy="315" r="300" stroke="#444444" stroke-width="2" fill="none" />
-
-  <!-- Text container -->
-  <text x="100" y="200" width="1000" height="230" text-anchor="left" fill="#ffffff"
-    font-family="system-ui, -apple-system, sans-serif" font-size="36">
-    TITLE_PLACEHOLDER
-  </text>
-
-  <!-- Website URL -->
-  <text x="600" y="550" text-anchor="middle" fill="#888888" font-family="system-ui, -apple-system, sans-serif"
-    font-size="24">
-    litvinovich.dev
-  </text>
+  <g clip-path="url(#clip0_3608_145)">
+    <rect width="1200" height="630" fill="#222222" />
+    <rect opacity="0.5" x="247" y="50" width="1986" height="1323" fill="url(#paint0_radial_3608_145)" />
+    <rect opacity="0.5" x="-554" y="-603" width="1223" height="1223" fill="url(#paint1_radial_3608_145)" />
+    <path opacity="0.4"
+      d="M0 415C55.2285 415 100 370.228 100 315C100 259.772 55.2285 215 0 215C-55.2285 215 -100 259.772 -100 315C-100 370.228 -55.2285 415 0 415Z"
+      stroke="white" stroke-width="2" />
+    <path opacity="0.3"
+      d="M0 515C110.457 515 200 425.457 200 315C200 204.543 110.457 115 0 115C-110.457 115 -200 204.543 -200 315C-200 425.457 -110.457 515 0 515Z"
+      stroke="white" stroke-width="2" />
+    <path opacity="0.2"
+      d="M0 615C165.685 615 300 480.685 300 315C300 149.315 165.685 15 0 15C-165.685 15 -300 149.315 -300 315C-300 480.685 -165.685 615 0 615Z"
+      stroke="white" stroke-width="2" />
+    <path opacity="0.1"
+      d="M0 715C220.914 715 400 535.914 400 315C400 94.0861 220.914 -85 0 -85C-220.914 -85 -400 94.0861 -400 315C-400 535.914 -220.914 715 0 715Z"
+      stroke="white" stroke-width="2" />
+    <path opacity="0.05"
+      d="M0 815C276.142 815 500 591.142 500 315C500 38.8576 276.142 -185 0 -185C-276.142 -185 -500 38.8576 -500 315C-500 591.142 -276.142 815 0 815Z"
+      stroke="white" stroke-width="2" />
+    <text fill="white" xml:space="preserve" style="white-space: pre" font-family="Roboto Mono" font-size="64"
+      font-weight="bold" letter-spacing="0em">
+      <tspan x="80" y="222.859">%TITLE%</tspan>
+    </text>
+    <g clip-path="url(#clip1_3608_145)">
+      <path
+        d="M190.688 115C190.688 124.049 184.815 132.44 174.902 138.636C165.008 144.82 151.257 148.688 136 148.688C120.743 148.688 106.992 144.82 97.0976 138.636C87.1848 132.44 81.3125 124.049 81.3125 115C81.3125 105.951 87.1848 97.5598 97.0976 91.3643C106.992 85.1803 120.743 81.3125 136 81.3125C151.257 81.3125 165.008 85.1803 174.902 91.3643C184.815 97.5598 190.688 105.951 190.688 115Z"
+        stroke="white" stroke-width="2.625" />
+      <path
+        d="M157.088 115C157.088 124.452 154.633 132.949 150.734 139.041C146.826 145.148 141.585 148.688 136.001 148.688C130.416 148.688 125.175 145.148 121.267 139.041C117.368 132.949 114.913 124.452 114.913 115C114.913 105.548 117.368 97.0512 121.267 90.9588C125.175 84.8516 130.416 81.3125 136.001 81.3125C141.585 81.3125 146.826 84.8516 150.734 90.9588C154.633 97.0512 157.088 105.548 157.088 115Z"
+        stroke="white" stroke-width="2.625" />
+      <path
+        d="M173.887 115C173.887 133.469 157.068 148.688 135.999 148.688C114.931 148.688 98.1118 133.469 98.1118 115C98.1118 96.5308 114.931 81.3125 135.999 81.3125C157.068 81.3125 173.887 96.5308 173.887 115Z"
+        stroke="white" stroke-width="2.625" />
+      <path d="M81 115L191 115" stroke="white" stroke-width="2.625" />
+      <path d="M136 81L136 149" stroke="white" stroke-width="2.625" />
+    </g>
+    <text fill="white" fill-opacity="0.6" xml:space="preserve" style="white-space: pre" font-family="Georgia"
+      font-size="24" font-style="italic" letter-spacing="0em">
+      <tspan x="80" y="558.873">%WEBSITE%</tspan>
+    </text>
+  </g>
+  <defs>
+    <radialGradient id="paint0_radial_3608_145" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse"
+      gradientTransform="translate(1240 711.5) rotate(90) scale(661.5 993)">
+      <stop stop-color="#EB00FF" />
+      <stop offset="1" stop-color="#EB00FF" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="paint1_radial_3608_145" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse"
+      gradientTransform="translate(57.5 8.5) rotate(90) scale(611.5)">
+      <stop stop-color="#15EC67" />
+      <stop offset="1" stop-color="#15EC67" stop-opacity="0" />
+    </radialGradient>
+    <clipPath id="clip0_3608_145">
+      <rect width="1200" height="630" fill="white" />
+    </clipPath>
+    <clipPath id="clip1_3608_145">
+      <rect width="112" height="70" fill="white" transform="translate(80 80)" />
+    </clipPath>
+  </defs>
 </svg>

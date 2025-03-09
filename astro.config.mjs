@@ -25,6 +25,7 @@ export default defineConfig({
   integrations: [
     ogImages({
       template: "./src/assets/og-template.svg",
+      website: "litvinovich.dev",
     }),
     AstroPWA({
       mode: isProd ? "production" : "development",

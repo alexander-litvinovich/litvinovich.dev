@@ -6,6 +6,7 @@ import { join, resolve } from "path";
 
 interface OGImagesOptions {
   template: string;
+  website: string;
 }
 
 interface AstroBuildProps {
@@ -106,7 +107,9 @@ async function generateOGImages(
       console.log("Output path:", outputPath);
 
       // Generate image
-      const svg = template.replace("TITLE_PLACEHOLDER", title);
+      const svg = template
+        .replace("%TITLE%", title)
+        .replace("%WEBSITE%", options.website);
       await sharp(Buffer.from(svg)).png().toFile(outputPath);
       console.log(`Generated image for ${pathname}`);
     }
