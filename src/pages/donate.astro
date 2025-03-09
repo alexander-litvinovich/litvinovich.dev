@@ -14,7 +14,7 @@ import Particles from "@/components/Particles.astro";
 import MicroButton from "@/components/MicroButton.astro";
 
 import IconArrowLeft from "@/assets/icon_arrow_left.svg";
-import socialSotvoril from "@/assets/social_sotvoril.png";
+import socialSohranil from "@/assets/social_sohranil.png";
 import socialCic from "@/assets/social_cic.svg";
 import avatar from "@/assets/avatar.png";
 import imgCoin from "@/assets/img_coin.png";
@@ -28,7 +28,7 @@ const ACCOUNT_LINKS = [
     href: "https://t.me/sohranil?utm_source=donate",
     label: "C0XPAHNЛ (RU)",
     networkLabel: "Telegram",
-    iconSrc: socialSotvoril,
+    iconSrc: socialSohranil,
   },
   {
     href: "https://www.youtube.com/@cuz_i_can_dev?utm_source=donate",
@@ -89,15 +89,15 @@ const DONATE_ACCS = [
       header="No money?"
       body="Subscribe to the channels, like posts and videos:"
     />
+    <MicroButton
+      intent="neutral"
+      variant="tertiary"
+      icon={IconArrowLeft}
+      label="Back Home"
+      url="/"
+    />
+    <MicroDate />
   </div>
-  <MicroButton
-    intent="neutral"
-    variant="tertiary"
-    icon={IconArrowLeft}
-    label="Back Home"
-    url="/"
-  />
-  <MicroDate />
   <BrickBreakerGame />
 </DarkLayout>
 
@@ -152,9 +152,10 @@ const DONATE_ACCS = [
 
   .Donate {
     padding: 0 var(--side-paddings);
+    padding-bottom: 32px;
     display: flex;
     flex-direction: column;
-    gap: 40px;
+    gap: 32px;
   }
 
   .Donate_header {

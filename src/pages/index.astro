@@ -1,8 +1,5 @@
 ---
-import { Image } from "astro:assets";
-
 import DarkLayout from "@/layouts/DarkLayout.astro";
-
 import MicroCard from "@/components/MicroCard.astro";
 import MicroSocialLinks from "@/components/MicroSocialLinks.astro";
 import MicroLinkButtons from "@/components/MicroLinkButtons.astro";
@@ -49,12 +46,12 @@ const BUTTONS = [
     desc: "Offerings, from 30 €/hr + Tax",
     newWindow: true,
   },
-  {
-    label: "Better Tomorrow",
-    href: "https://bettertomorrow.dev/?utm_source=homepage",
-    desc: "Indie hacker’s products portfolio",
-    newWindow: true,
-  },
+  // {
+  //   label: "Better Tomorrow",
+  //   href: "https://bettertomorrow.dev/?utm_source=homepage",
+  //   desc: "Indie hacker’s products portfolio",
+  //   newWindow: true,
+  // },
   {
     label: "Mind Sweeper (α)",
     href: "https://staging.bettertomorrow.dev/?utm_source=homepage",
@@ -78,7 +75,7 @@ const DESC = [
   <MicroCard />
   <MicroSocialLinks links={SOCIAL_LINKS} />
   <MicroLinkButtons buttons={BUTTONS} />
-  <MicroDesc texts={DESC} />
+  <!-- <MicroDesc texts={DESC} /> -->
   <MicroMotd />
   <MicroDate />
   <MicroGlyph />

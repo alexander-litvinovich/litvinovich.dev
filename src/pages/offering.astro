@@ -4,9 +4,14 @@ import MicroButton from "@/components/MicroButton.astro";
 import MicroDate from "@/components/MicroDate.astro";
 
 import computer from "@/assets/computer.mp4";
+
+const head = {
+  title: "Want a similar landing page?",
+};
 ---
 
 <DarkLayout
+  head={head}
   showGrid={true}
   showHomeLink={true}
   homePageHint="Design and development services offering"
@@ -14,17 +19,17 @@ import computer from "@/assets/computer.mp4";
   <div class="Offering">
     <video autoplay loop class="Offering_video">
       <source src={computer} type="video/mp4" />
-      Your browser does not support the video tag.
+      No hands? No video.
     </video>
 
     <div>
-      <h1>Superfancy Custom Micro Landing page</h1>
+      <h1>Super fancy Custom Micro Landing page</h1>
 
       <p>
-        Feel free to explore the current solution on my GitHub. It's kinda
-        modular, Astro-based, static built. It doesn't consume a lot of
-        resources and flawlessly works on a basic VPS (it might work on cheap
-        website hosting).
+        Feel free to explore the current solution on my GitHub. It's modular,
+        Astro-based, static built. It doesn't consume many resources and
+        flawlessly works on a basic VPS (it might work on cheap website
+        hosting).
       </p>
       <p>
         <MicroButton
@@ -38,16 +43,15 @@ import computer from "@/assets/computer.mp4";
     <div class="Offering_paper">
       <h2>Coding is not your thing?</h2>
       <p>
-        Looking for a unique and personalized web presence? I specialize in
-        creating custom-tailored web solutions that perfectly fit your needs.
-        Whether it's a personal blog, a portfolio, or a business website, I can
-        help bring your vision to life with a modern, responsive, and efficient
-        design and code.
+        Are you looking for a unique and personalized website but scared of all
+        the web technologies? Let's collaborate to create custom-tailored web
+        solutions that perfectly fit your needs. Whether it's a personal blog,
+        a portfolio, or a business website, I can help bring your vision to life
+        with a modern, responsive, and efficient design and code.
       </p>
       <p>
-        Let's collaborate to build a website that stands out and delivers an
-        exceptional user experience. Contact me to discuss your project and get
-        started on creating something amazing together.
+        Reach out to me so we can talk about your project and begin building
+        something incredible for you.
       </p>
       <p>
         <MicroButton
@@ -68,7 +72,6 @@ import computer from "@/assets/computer.mp4";
     padding: var(--side-paddings);
     display: flex;
     flex-direction: column;
-    align-items: start;
     gap: 24px;
   }
 

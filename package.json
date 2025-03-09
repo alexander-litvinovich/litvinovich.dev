@@ -1,10 +1,13 @@
 {
   "name": "litvinovich-dev-microlanding",
+  "author": "Alexander Litvinovich",
+  "description": "Micro landing page for litvinovich.dev",
   "type": "module",
   "version": "0.0.1",
   "scripts": {
     "dev": "NODE_ENV=development astro dev",
     "build": "NODE_ENV=production astro build",
+    "deploy": "NODE_ENV=production astro build && ./sync.sh",
     "preview": "astro preview",
     "astro": "astro",
     "lint:css": "stylelint \"src/**/*.{css,astro}\"",

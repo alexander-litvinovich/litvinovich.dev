@@ -26,7 +26,7 @@ const { accountLinks, header, body } = Astro.props as {
     {
       accountLinks.map((link, index) => (
         <>
-          <a class="MicroAccLinks_link" href={link.href}>
+          <a class="MicroAccLinks_link" href={link.href} target="_blank">
             <div class="MicroAccLinks_image">
               <Image src={link.iconSrc} alt="" />
             </div>
@@ -112,7 +112,6 @@ const { accountLinks, header, body } = Astro.props as {
   }
 
   .MicroAccLinks_col {
-
     position: relative;
     display: flex;
     flex-direction: column;
